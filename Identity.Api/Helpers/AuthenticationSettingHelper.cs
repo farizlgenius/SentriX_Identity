@@ -21,14 +21,17 @@ public class AuthenticationSettingHelper
     var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret));
 
     // Add Authentication
-    builder.Services.AddAuthentication(options =>
+    builder.Services.AddAuthentication(
+      options =>
     {
+      options.DefaultScheme = "SmartScheme";
       // options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
       // options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 
-      options.DefaultAuthenticateScheme = "SmartScheme";
-      options.DefaultChallengeScheme = "SmartScheme";
-    })
+      // options.DefaultAuthenticateScheme = "SmartScheme";
+      // options.DefaultChallengeScheme = "SmartScheme";
+    }
+    )
     .AddPolicyScheme("SmartScheme", "JWT or API Key", options =>
 {
   options.ForwardDefaultSelector = context =>

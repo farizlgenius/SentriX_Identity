@@ -1,5 +1,6 @@
-using System;
-using Microsoft.OpenApi;
+
+
+using Microsoft.OpenApi.Models;
 
 namespace Identity.Api.Helpers;
 
@@ -10,50 +11,70 @@ public class SwaggerSettingHelper
     // Add services to the container.
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen(c =>
+{
+  // ===== DOC =====
+  c.SwaggerDoc("v1", new()
+  {
+    Title = "SentriX Identity API",
+    Version = "v1",
+    Description = "API for Identity Management in SentriX System",
+    Contact = new()
     {
-      c.SwaggerDoc("v1", new()
-      {
-        Title = "SentriX Identity API",
-        Version = "v1",
-        Description = "API for Identity Management in SentriX System",
-        Contact = new()
+      Name = "SentriX Team",
+      Email = "support@sentrix.com",
+      Url = new Uri("https://sentrix.com")
+    }
+  });
+
+  // ===== JWT SCHEME =====
+  c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+  {
+    Name = "Authorization",
+    Type = SecuritySchemeType.Http,
+    Scheme = "bearer",
+    BearerFormat = "JWT",
+    In = ParameterLocation.Header,
+    Description = "Enter: Bearer {token}"
+  });
+
+  // ===== API KEY SCHEME =====
+  c.AddSecurityDefinition("ApiKey", new OpenApiSecurityScheme
+  {
+    Name = "X-API-KEY",
+    Type = SecuritySchemeType.ApiKey,
+    In = ParameterLocation.Header
+  });
+
+  // ⭐⭐⭐ THE IMPORTANT PART ⭐⭐⭐
+  c.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    new string[] {}
+    },
+    {
+        new OpenApiSecurityScheme
         {
-          Name = "SentriX Team",
-          Email = "support@sentrix.com",
-          Url = new Uri("https://sentrix.com")
-        }
-      });
-
-      c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-      {
-        Type = SecuritySchemeType.Http,
-        In = ParameterLocation.Header,
-        Description = "Please enter JWT with Bearer prefix. Example: Bearer {token}",
-        Name = "Authorization",
-        Scheme = "Bearer"
-      });
-
-      c.AddSecurityDefinition("ApiKey", new OpenApiSecurityScheme
-      {
-        Type = SecuritySchemeType.ApiKey,
-        In = ParameterLocation.Header,
-        Name = "X-API-KEY",
-        Description = "API Key needed to access endpoints",
-        Scheme = "ApiKey"
-      });
-
-      // 🔐 REQUIRE JWT (Swashbuckle 10 way)
-      c.AddSecurityRequirement(document =>
-          new OpenApiSecurityRequirement
+          Reference = new OpenApiReference
           {
-            [
-                  new OpenApiSecuritySchemeReference("Bearer")
-              ] = new List<string>(),
-            [
-                  new OpenApiSecuritySchemeReference("ApiKey")
-              ] = new List<string>()
-          });
-    });
+            Type = ReferenceType.SecurityScheme,
+            Id="ApiKey"
+          }
+        },
+        new string[] {}
+    }
+            });
+
+
+});
+
 
 
   }

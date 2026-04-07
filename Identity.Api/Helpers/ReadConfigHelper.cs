@@ -1,4 +1,5 @@
 using System;
+using Identity.Application.Interfaces;
 using Identity.Application.Settings;
 
 namespace Identity.Api.Helpers;
@@ -11,10 +12,14 @@ public class ReadConfigHelper
     // Read config from appsetting.json
     // ==========================
 
+
     builder.Services
-              .AddOptions<Jwt>()
-              .Bind(builder.Configuration.GetSection("JwtSetting"))
-              .ValidateOnStart();
+           .AddOptions<JwtData>()
+           .Bind(builder.Configuration.GetSection("JwtSetting"))
+           .ValidateOnStart();
+
+    builder.Services.AddSingleton<IJwtData>(sp => sp.GetRequiredService<
+        Microsoft.Extensions.Options.IOptions<JwtData>>().Value);
 
     // builder.Services
     //        .AddOptions<HttpSetting>()

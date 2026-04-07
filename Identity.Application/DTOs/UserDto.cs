@@ -1,7 +1,7 @@
 using System;
 using System.Net;
 
-namespace Identity.Api.DTOs;
+namespace Identity.Application.DTOs;
 
 public sealed record UserDto(
   HttpStatusCode Code,

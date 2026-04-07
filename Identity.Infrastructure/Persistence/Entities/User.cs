@@ -7,6 +7,7 @@ public sealed class User : BaseEntity
 {
   public string user_id { get; set; } = string.Empty;
   public string username { get; set; } = string.Empty;
+  public string password { get; set; } = string.Empty;
   public Title title { get; set; } = Title.Mr;
   public string firstname { get; set; } = string.Empty;
   public string middlename { get; set; } = string.Empty;
@@ -18,12 +19,15 @@ public sealed class User : BaseEntity
   /// <summary>
   /// Relation
   /// </summary>
-  public Position position { get; set; } = null!;
-  public int position_id { get; set; }
-  public Department department { get; set; } = null!;
-  public int department_id { get; set; }
+  public Company? company { get; set; } = null!;
+  public int? company_id { get; set; }
+  public Position? position { get; set; } = null!;
+  public int? position_id { get; set; }
+  public Department? department { get; set; } = null!;
+  public int? department_id { get; set; }
   public Role role { get; set; } = null!;
   public int role_id { get; set; }
+  public ICollection<UserLocation> user_locations { get; set; } = new List<UserLocation>();
 
   public User() { }
 

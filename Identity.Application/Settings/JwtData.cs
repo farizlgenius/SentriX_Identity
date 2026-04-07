@@ -3,7 +3,7 @@ using Identity.Application.Interfaces;
 
 namespace Identity.Application.Settings;
 
-public class Jwt : IJwt
+public sealed class JwtData : IJwtData
 {
   public string Secret { get; set; } = string.Empty;
 
@@ -12,4 +12,5 @@ public class Jwt : IJwt
   public string Audience { get; set; } = string.Empty;
 
   public short AccessTokenMinutes { get; set; }
+  public short RefreshTokenDays { get; set; }
 }

@@ -1,4 +1,5 @@
 using System;
+using Identity.Domain.Enums;
 using Identity.Infrastructure.Persistence.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +16,8 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
   public DbSet<User> Users { get; set; }
   public DbSet<ApiKey> ApiKeys { get; set; }
   public DbSet<Feature> Features { get; set; }
+  public DbSet<RefreshTokenAudit> RefreshTokenAudits { get; set; }
+  public DbSet<UserLocation> UserLocations { get; set; }
 
   protected override void OnModelCreating(ModelBuilder modelBuilder)
   {
@@ -38,11 +41,16 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
         .Property(e => e.gender)
         .HasConversion<string>();
 
+    modelBuilder.Entity<RefreshTokenAudit>()
+        .Property(e => e.action)
+        .HasConversion<string>();
+
     modelBuilder.Entity<User>()
         .Property(e => e.title)
         .HasConversion<string>();
 
     // Configure entity relationships and constraints here if needed
+
     modelBuilder.Entity<Location>()
       .HasMany(l => l.companies)
       .WithOne(c => c.location)
@@ -59,21 +67,39 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
       .HasMany(c => c.departments)
       .WithOne(d => d.company)
       .HasForeignKey(d => d.company_id)
-      .OnDelete(DeleteBehavior.Cascade);
+      .OnDelete(DeleteBehavior.Cascade)
+      .IsRequired(false);
+
+    modelBuilder.Entity<Department>()
+    .HasMany(x => x.positions)
+    .WithOne(x => x.department)
+    .HasForeignKey(x => x.department_id)
+    .OnDelete(DeleteBehavior.Cascade)
+      .IsRequired(false);
 
     ///// Configure the relationships for User entity
+    /// 
+
+    modelBuilder.Entity<Company>()
+      .HasMany(d => d.users)
+      .WithOne(u => u.company)
+      .HasForeignKey(u => u.company_id)
+      .OnDelete(DeleteBehavior.Cascade)
+      .IsRequired(false);
 
     modelBuilder.Entity<Position>()
       .HasMany(p => p.users)
       .WithOne(r => r.position)
       .HasForeignKey(r => r.position_id)
-      .OnDelete(DeleteBehavior.Cascade);
+      .OnDelete(DeleteBehavior.Cascade)
+      .IsRequired(false);
 
     modelBuilder.Entity<Department>()
       .HasMany(d => d.users)
       .WithOne(u => u.department)
       .HasForeignKey(u => u.department_id)
-      .OnDelete(DeleteBehavior.Cascade);
+      .OnDelete(DeleteBehavior.Cascade)
+      .IsRequired(false);
 
     modelBuilder.Entity<Role>()
       .HasMany(r => r.users)
@@ -92,6 +118,21 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
      .WithMany(r => r.permissions)
      .HasForeignKey(p => p.feature_id)
      .OnDelete(DeleteBehavior.Cascade);
+
+    modelBuilder.Entity<UserLocation>()
+    .HasKey(x => new { x.location_id, x.user_id });
+
+    modelBuilder.Entity<User>()
+    .HasMany(u => u.user_locations)
+    .WithOne(u => u.user)
+    .HasForeignKey(u => u.user_id)
+    .OnDelete(DeleteBehavior.Cascade);
+
+    modelBuilder.Entity<Location>()
+    .HasMany(u => u.user_locations)
+    .WithOne(u => u.location)
+    .HasForeignKey(u => u.location_id)
+    .OnDelete(DeleteBehavior.Cascade);
 
     //// Configure the data inside the database if needed
 
@@ -279,6 +320,48 @@ new Country { id = 177, name = "Zimbabwe", code = "ZW" }
     new Feature { id = 2, name = "events", },
     new Feature { id = 3, name = "reports", },
     new Feature { id = 4, name = "settings", }
+    );
+
+    modelBuilder.Entity<Role>()
+    .HasData(
+      new Role { id = 1, name = "Administrator", description = "System Administrator" }
+    );
+
+    modelBuilder.Entity<Location>()
+    .HasData(
+      new Location { id = 1, name = "Main", description = "Default Location", city = "SentriX", country_id = 158 }
+    );
+
+    modelBuilder.Entity<Permission>()
+    .HasData(
+      new Permission { id = 1, role_id = 1, feature_id = 1, is_enabled = true, is_created = true, is_deleted = true, is_updated = true },
+      new Permission { id = 2, role_id = 1, feature_id = 2, is_enabled = true, is_created = true, is_deleted = true, is_updated = true },
+      new Permission { id = 3, role_id = 1, feature_id = 3, is_enabled = true, is_created = true, is_deleted = true, is_updated = true },
+      new Permission { id = 4, role_id = 1, feature_id = 4, is_enabled = true, is_created = true, is_deleted = true, is_updated = true }
+    );
+
+    modelBuilder.Entity<User>()
+    .HasData(
+      new User
+      {
+        id = 1,
+        user_id = "ADMIN001",
+        username = "admin",
+        password = "100000.lG1/4V/VRPZsbhf/Zqc4xw==.6vYcf+wEMSgqcaNhoZEdM9PaPxx2ZUErZhQbeMxo5OY=",
+        title = Title.Mr,
+        firstname = "Administrator",
+        middlename = "",
+        lastname = "SentriX",
+        gender = Gender.Male,
+        email = "admin@sentrix.com",
+        mobile = "",
+        role_id = 1
+      }
+    );
+
+    modelBuilder.Entity<UserLocation>()
+    .HasData(
+      new UserLocation { user_id = 1, location_id = 1 }
     );
 
   }

@@ -15,6 +15,24 @@ namespace Identity.Infrastructure.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "ApiKeys",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    key = table.Column<string>(type: "text", nullable: false),
+                    owner = table.Column<string>(type: "text", nullable: false),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false),
+                    ExpireAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW()"),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW()")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ApiKeys", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Country",
                 columns: table => new
                 {
@@ -31,7 +49,7 @@ namespace Identity.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Feature",
+                name: "Features",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
@@ -42,23 +60,26 @@ namespace Identity.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Feature", x => x.id);
+                    table.PrimaryKey("PK_Features", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Positions",
+                name: "RefreshTokenAudits",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    name = table.Column<string>(type: "text", nullable: false),
-                    description = table.Column<string>(type: "text", nullable: false),
+                    username = table.Column<string>(type: "text", nullable: false),
+                    user_id = table.Column<string>(type: "text", nullable: false),
+                    hashed_refresh_token = table.Column<string>(type: "text", nullable: false),
+                    action = table.Column<string>(type: "text", nullable: false),
+                    expired_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW()"),
                     updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW()")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Positions", x => x.id);
+                    table.PrimaryKey("PK_RefreshTokenAudits", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -120,9 +141,9 @@ namespace Identity.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_Permissions", x => x.id);
                     table.ForeignKey(
-                        name: "FK_Permissions_Feature_feature_id",
+                        name: "FK_Permissions_Features_feature_id",
                         column: x => x.feature_id,
-                        principalTable: "Feature",
+                        principalTable: "Features",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -182,6 +203,29 @@ namespace Identity.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Positions",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    name = table.Column<string>(type: "text", nullable: false),
+                    description = table.Column<string>(type: "text", nullable: false),
+                    department_id = table.Column<int>(type: "integer", nullable: true),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW()"),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW()")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Positions", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_Positions_Departments_department_id",
+                        column: x => x.department_id,
+                        principalTable: "Departments",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
@@ -189,6 +233,7 @@ namespace Identity.Infrastructure.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     user_id = table.Column<string>(type: "text", nullable: false),
                     username = table.Column<string>(type: "text", nullable: false),
+                    password = table.Column<string>(type: "text", nullable: false),
                     title = table.Column<string>(type: "text", nullable: false),
                     firstname = table.Column<string>(type: "text", nullable: false),
                     middlename = table.Column<string>(type: "text", nullable: false),
@@ -196,8 +241,11 @@ namespace Identity.Infrastructure.Migrations
                     gender = table.Column<string>(type: "text", nullable: false),
                     email = table.Column<string>(type: "text", nullable: false),
                     mobile = table.Column<string>(type: "text", nullable: false),
-                    position_id = table.Column<int>(type: "integer", nullable: false),
-                    department_id = table.Column<int>(type: "integer", nullable: false),
+                    location_id = table.Column<int>(type: "integer", nullable: false),
+                    locationid = table.Column<int>(type: "integer", nullable: true),
+                    company_id = table.Column<int>(type: "integer", nullable: true),
+                    position_id = table.Column<int>(type: "integer", nullable: true),
+                    department_id = table.Column<int>(type: "integer", nullable: true),
                     role_id = table.Column<int>(type: "integer", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW()"),
                     updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW()")
@@ -206,11 +254,22 @@ namespace Identity.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_Users", x => x.id);
                     table.ForeignKey(
+                        name: "FK_Users_Companies_company_id",
+                        column: x => x.company_id,
+                        principalTable: "Companies",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "FK_Users_Departments_department_id",
                         column: x => x.department_id,
                         principalTable: "Departments",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Users_Locations_locationid",
+                        column: x => x.locationid,
+                        principalTable: "Locations",
+                        principalColumn: "id");
                     table.ForeignKey(
                         name: "FK_Users_Positions_position_id",
                         column: x => x.position_id,
@@ -221,6 +280,30 @@ namespace Identity.Infrastructure.Migrations
                         name: "FK_Users_Roles_role_id",
                         column: x => x.role_id,
                         principalTable: "Roles",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserLocations",
+                columns: table => new
+                {
+                    user_id = table.Column<int>(type: "integer", nullable: false),
+                    location_id = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserLocations", x => new { x.location_id, x.user_id });
+                    table.ForeignKey(
+                        name: "FK_UserLocations_Locations_location_id",
+                        column: x => x.location_id,
+                        principalTable: "Locations",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserLocations_Users_user_id",
+                        column: x => x.user_id,
+                        principalTable: "Users",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -410,7 +493,7 @@ namespace Identity.Infrastructure.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Feature",
+                table: "Features",
                 columns: new[] { "id", "name" },
                 values: new object[,]
                 {
@@ -419,6 +502,37 @@ namespace Identity.Infrastructure.Migrations
                     { 3, "reports" },
                     { 4, "settings" }
                 });
+
+            migrationBuilder.InsertData(
+                table: "Roles",
+                columns: new[] { "id", "description", "name" },
+                values: new object[] { 1, "System Administrator", "Administrator" });
+
+            migrationBuilder.InsertData(
+                table: "Locations",
+                columns: new[] { "id", "city", "country_id", "description", "name" },
+                values: new object[] { 1, "SentriX", 158, "Default Location", "Main" });
+
+            migrationBuilder.InsertData(
+                table: "Permissions",
+                columns: new[] { "id", "feature_id", "is_created", "is_deleted", "is_enabled", "is_updated", "role_id" },
+                values: new object[,]
+                {
+                    { 1, 1, true, true, true, true, 1 },
+                    { 2, 2, true, true, true, true, 1 },
+                    { 3, 3, true, true, true, true, 1 },
+                    { 4, 4, true, true, true, true, 1 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "id", "company_id", "department_id", "email", "firstname", "gender", "lastname", "location_id", "locationid", "middlename", "mobile", "password", "position_id", "role_id", "title", "user_id", "username" },
+                values: new object[] { 1, null, null, "admin@sentrix.com", "Administrator", "Male", "SentriX", 0, null, "", "", "100000.lG1/4V/VRPZsbhf/Zqc4xw==.6vYcf+wEMSgqcaNhoZEdM9PaPxx2ZUErZhQbeMxo5OY=", null, 1, "Mr", "ADMIN001", "admin" });
+
+            migrationBuilder.InsertData(
+                table: "UserLocations",
+                columns: new[] { "location_id", "user_id" },
+                values: new object[] { 1, 1 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Companies_location_id",
@@ -446,9 +560,29 @@ namespace Identity.Infrastructure.Migrations
                 column: "role_id");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Positions_department_id",
+                table: "Positions",
+                column: "department_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserLocations_user_id",
+                table: "UserLocations",
+                column: "user_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_company_id",
+                table: "Users",
+                column: "company_id");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Users_department_id",
                 table: "Users",
                 column: "department_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_locationid",
+                table: "Users",
+                column: "locationid");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_position_id",
@@ -465,22 +599,31 @@ namespace Identity.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "ApiKeys");
+
+            migrationBuilder.DropTable(
                 name: "Permissions");
 
             migrationBuilder.DropTable(
+                name: "RefreshTokenAudits");
+
+            migrationBuilder.DropTable(
+                name: "UserLocations");
+
+            migrationBuilder.DropTable(
+                name: "Features");
+
+            migrationBuilder.DropTable(
                 name: "Users");
-
-            migrationBuilder.DropTable(
-                name: "Feature");
-
-            migrationBuilder.DropTable(
-                name: "Departments");
 
             migrationBuilder.DropTable(
                 name: "Positions");
 
             migrationBuilder.DropTable(
                 name: "Roles");
+
+            migrationBuilder.DropTable(
+                name: "Departments");
 
             migrationBuilder.DropTable(
                 name: "Companies");

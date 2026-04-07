@@ -1,7 +1,10 @@
 using System;
+using Identity.Api.Middlewares;
 using Identity.Application.Interfaces;
 using Identity.Application.Services;
+using Identity.Application.Settings;
 using Identity.Infrastructure.Repositories;
+using Microsoft.Extensions.Options;
 
 namespace Identity.Api.Helpers;
 
@@ -10,10 +13,25 @@ public class DISettingHelper
   public static void DISetting(WebApplicationBuilder builder)
   {
     // ==========================
-    // Adding App Dependency Injection
+    // Adding Repository
+    // ==========================
+    builder.Services.AddScoped<IApiKeyRepository, ApiKeyRepository>();
+    builder.Services.AddScoped<IAuthRepository, AuthRepository>();
+    builder.Services.AddScoped<IRefreshTokenAuditRepository, RefreshTokenAuditRepository>();
+
+    // ==========================
+    // Adding Service
     // ==========================
     builder.Services.AddScoped<IApiKeyService, ApiKeyService>();
-    builder.Services.AddScoped<IApiKeyRepository, ApiKeyRepository>();
+    builder.Services.AddScoped<IAuthService, AuthService>();
+    builder.Services.AddScoped<IJwtService, JwtService>();
+    builder.Services.AddScoped<IUserService, UserService>();
+
+    // ==========================
+    // Custom Service
+    // ==========================
+    builder.Services.AddTransient<GlobalException>();
+
     // // DI
     // builder.Services.AddHttpClient();
     // builder.Services.AddScoped<ICache, CacheRepository>();

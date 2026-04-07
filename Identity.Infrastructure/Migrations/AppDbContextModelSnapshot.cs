@@ -1683,6 +1683,18 @@ namespace Identity.Infrastructure.Migrations
                     b.HasIndex("country_id");
 
                     b.ToTable("Locations");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            city = "SentriX",
+                            country_id = 158,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            description = "Default Location",
+                            name = "Main",
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
                 });
 
             modelBuilder.Entity("Identity.Infrastructure.Persistence.Entities.Permission", b =>
@@ -1728,6 +1740,56 @@ namespace Identity.Infrastructure.Migrations
                     b.HasIndex("role_id");
 
                     b.ToTable("Permissions");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            feature_id = 1,
+                            is_created = true,
+                            is_deleted = true,
+                            is_enabled = true,
+                            is_updated = true,
+                            role_id = 1,
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            id = 2,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            feature_id = 2,
+                            is_created = true,
+                            is_deleted = true,
+                            is_enabled = true,
+                            is_updated = true,
+                            role_id = 1,
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            id = 3,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            feature_id = 3,
+                            is_created = true,
+                            is_deleted = true,
+                            is_enabled = true,
+                            is_updated = true,
+                            role_id = 1,
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            id = 4,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            feature_id = 4,
+                            is_created = true,
+                            is_deleted = true,
+                            is_enabled = true,
+                            is_updated = true,
+                            role_id = 1,
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
                 });
 
             modelBuilder.Entity("Identity.Infrastructure.Persistence.Entities.Position", b =>
@@ -1742,6 +1804,9 @@ namespace Identity.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("NOW()");
+
+                    b.Property<int?>("department_id")
+                        .HasColumnType("integer");
 
                     b.Property<string>("description")
                         .IsRequired()
@@ -1758,7 +1823,51 @@ namespace Identity.Infrastructure.Migrations
 
                     b.HasKey("id");
 
+                    b.HasIndex("department_id");
+
                     b.ToTable("Positions");
+                });
+
+            modelBuilder.Entity("Identity.Infrastructure.Persistence.Entities.RefreshTokenAudit", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<string>("action")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
+
+                    b.Property<DateTime>("expired_at")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("hashed_refresh_token")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("updated_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
+
+                    b.Property<string>("user_id")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("username")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("id");
+
+                    b.ToTable("RefreshTokenAudits");
                 });
 
             modelBuilder.Entity("Identity.Infrastructure.Persistence.Entities.Role", b =>
@@ -1790,6 +1899,16 @@ namespace Identity.Infrastructure.Migrations
                     b.HasKey("id");
 
                     b.ToTable("Roles");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            description = "System Administrator",
+                            name = "Administrator",
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
                 });
 
             modelBuilder.Entity("Identity.Infrastructure.Persistence.Entities.User", b =>
@@ -1800,12 +1919,15 @@ namespace Identity.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
 
+                    b.Property<int?>("company_id")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime>("created_at")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("NOW()");
 
-                    b.Property<int>("department_id")
+                    b.Property<int?>("department_id")
                         .HasColumnType("integer");
 
                     b.Property<string>("email")
@@ -1824,6 +1946,12 @@ namespace Identity.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("location_id")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("locationid")
+                        .HasColumnType("integer");
+
                     b.Property<string>("middlename")
                         .IsRequired()
                         .HasColumnType("text");
@@ -1832,7 +1960,11 @@ namespace Identity.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("position_id")
+                    b.Property<string>("password")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int?>("position_id")
                         .HasColumnType("integer");
 
                     b.Property<int>("role_id")
@@ -1857,13 +1989,59 @@ namespace Identity.Infrastructure.Migrations
 
                     b.HasKey("id");
 
+                    b.HasIndex("company_id");
+
                     b.HasIndex("department_id");
+
+                    b.HasIndex("locationid");
 
                     b.HasIndex("position_id");
 
                     b.HasIndex("role_id");
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            email = "admin@sentrix.com",
+                            firstname = "Administrator",
+                            gender = "Male",
+                            lastname = "SentriX",
+                            location_id = 0,
+                            middlename = "",
+                            mobile = "",
+                            password = "100000.lG1/4V/VRPZsbhf/Zqc4xw==.6vYcf+wEMSgqcaNhoZEdM9PaPxx2ZUErZhQbeMxo5OY=",
+                            role_id = 1,
+                            title = "Mr",
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            user_id = "ADMIN001",
+                            username = "admin"
+                        });
+                });
+
+            modelBuilder.Entity("Identity.Infrastructure.Persistence.Entities.UserLocation", b =>
+                {
+                    b.Property<int>("location_id")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("user_id")
+                        .HasColumnType("integer");
+
+                    b.HasKey("location_id", "user_id");
+
+                    b.HasIndex("user_id");
+
+                    b.ToTable("UserLocations");
+
+                    b.HasData(
+                        new
+                        {
+                            location_id = 1,
+                            user_id = 1
+                        });
                 });
 
             modelBuilder.Entity("Identity.Infrastructure.Persistence.Entities.Company", b =>
@@ -1882,8 +2060,7 @@ namespace Identity.Infrastructure.Migrations
                     b.HasOne("Identity.Infrastructure.Persistence.Entities.Company", "company")
                         .WithMany("departments")
                         .HasForeignKey("company_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("company");
                 });
@@ -1918,19 +2095,36 @@ namespace Identity.Infrastructure.Migrations
                     b.Navigation("role");
                 });
 
+            modelBuilder.Entity("Identity.Infrastructure.Persistence.Entities.Position", b =>
+                {
+                    b.HasOne("Identity.Infrastructure.Persistence.Entities.Department", "department")
+                        .WithMany("positions")
+                        .HasForeignKey("department_id")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("department");
+                });
+
             modelBuilder.Entity("Identity.Infrastructure.Persistence.Entities.User", b =>
                 {
+                    b.HasOne("Identity.Infrastructure.Persistence.Entities.Company", "company")
+                        .WithMany("users")
+                        .HasForeignKey("company_id")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("Identity.Infrastructure.Persistence.Entities.Department", "department")
                         .WithMany("users")
                         .HasForeignKey("department_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Identity.Infrastructure.Persistence.Entities.Location", "location")
+                        .WithMany()
+                        .HasForeignKey("locationid");
 
                     b.HasOne("Identity.Infrastructure.Persistence.Entities.Position", "position")
                         .WithMany("users")
                         .HasForeignKey("position_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Identity.Infrastructure.Persistence.Entities.Role", "role")
                         .WithMany("users")
@@ -1938,16 +2132,41 @@ namespace Identity.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("company");
+
                     b.Navigation("department");
+
+                    b.Navigation("location");
 
                     b.Navigation("position");
 
                     b.Navigation("role");
                 });
 
+            modelBuilder.Entity("Identity.Infrastructure.Persistence.Entities.UserLocation", b =>
+                {
+                    b.HasOne("Identity.Infrastructure.Persistence.Entities.Location", "location")
+                        .WithMany("user_locations")
+                        .HasForeignKey("location_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Identity.Infrastructure.Persistence.Entities.User", "user")
+                        .WithMany("user_locations")
+                        .HasForeignKey("user_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("location");
+
+                    b.Navigation("user");
+                });
+
             modelBuilder.Entity("Identity.Infrastructure.Persistence.Entities.Company", b =>
                 {
                     b.Navigation("departments");
+
+                    b.Navigation("users");
                 });
 
             modelBuilder.Entity("Identity.Infrastructure.Persistence.Entities.Country", b =>
@@ -1957,6 +2176,8 @@ namespace Identity.Infrastructure.Migrations
 
             modelBuilder.Entity("Identity.Infrastructure.Persistence.Entities.Department", b =>
                 {
+                    b.Navigation("positions");
+
                     b.Navigation("users");
                 });
 
@@ -1968,6 +2189,8 @@ namespace Identity.Infrastructure.Migrations
             modelBuilder.Entity("Identity.Infrastructure.Persistence.Entities.Location", b =>
                 {
                     b.Navigation("companies");
+
+                    b.Navigation("user_locations");
                 });
 
             modelBuilder.Entity("Identity.Infrastructure.Persistence.Entities.Position", b =>
@@ -1980,6 +2203,11 @@ namespace Identity.Infrastructure.Migrations
                     b.Navigation("permissions");
 
                     b.Navigation("users");
+                });
+
+            modelBuilder.Entity("Identity.Infrastructure.Persistence.Entities.User", b =>
+                {
+                    b.Navigation("user_locations");
                 });
 #pragma warning restore 612, 618
         }

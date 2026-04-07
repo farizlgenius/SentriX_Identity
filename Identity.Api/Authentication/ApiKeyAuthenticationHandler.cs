@@ -20,7 +20,9 @@ public class ApiKeyAuthenticationHandler : AuthenticationHandler<ApiKeyAuthentic
   }
   protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
   {
-    if (!Request.Headers.TryGetValue(HEADER_NAME, out var apiKeyHeader))
+
+    var apiKeyHeader = Request.Headers["X-API-KEY"].FirstOrDefault() ?? string.Empty;
+    if (string.IsNullOrWhiteSpace(apiKeyHeader))
     {
       Context.Items["AuthError"] = "API Key header (X-API-KEY) is missing";
       return AuthenticateResult.Fail("API Key missing");

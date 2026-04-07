@@ -8,6 +8,7 @@ public sealed class Department : BaseEntity
   public string description { get; set; } = string.Empty;
   public int company_id { get; set; }
   public Company company { get; set; } = null!;
+  public ICollection<Position> positions { get; set; } = new List<Position>();
   public ICollection<User> users { get; set; } = new List<User>();
 
   /// <summary>

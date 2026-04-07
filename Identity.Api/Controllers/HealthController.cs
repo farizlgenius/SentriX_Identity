@@ -1,5 +1,5 @@
 using System.Net;
-using Identity.Api.DTOs;
+using Identity.Application.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +8,7 @@ namespace Identity.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = "SmartScheme")]
+    [Authorize]
     public class HealthController : ControllerBase
     {
         [HttpGet]
