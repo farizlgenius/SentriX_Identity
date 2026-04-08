@@ -12,9 +12,9 @@ public sealed class ValidationHelper
     }
   }
 
-  public static void ValidateNotZero(int value, string parameterName)
+  public static void ValidateNotMinus(int value, string parameterName)
   {
-    if (value <= 0)
+    if (value < 0)
     {
       throw new ArgumentException($"'{parameterName}' cannot be zero.", parameterName);
     }

@@ -18,6 +18,7 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
   public DbSet<Feature> Features { get; set; }
   public DbSet<RefreshTokenAudit> RefreshTokenAudits { get; set; }
   public DbSet<UserLocation> UserLocations { get; set; }
+  public DbSet<Country> Countries { get; set; }
 
   protected override void OnModelCreating(ModelBuilder modelBuilder)
   {
@@ -329,7 +330,7 @@ new Country { id = 177, name = "Zimbabwe", code = "ZW" }
 
     modelBuilder.Entity<Location>()
     .HasData(
-      new Location { id = 1, name = "Main", description = "Default Location", city = "SentriX", country_id = 158 }
+      new Location { id = 1, name = "Main", description = "Default Location", country_id = 158 }
     );
 
     modelBuilder.Entity<Permission>()

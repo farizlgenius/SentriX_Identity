@@ -18,7 +18,7 @@ namespace Identity.Api.Controllers
         public async Task<IActionResult> Login([FromForm] LoginDto dto)
         {
             var token = await service.LoginAsync(dto, Response);
-            return ControllerHelper.FromStatusCode(this, token);
+            return Ok(token);
         }
 
         [HttpPost("refresh")]
@@ -30,12 +30,12 @@ namespace Identity.Api.Controllers
                 string? refreshToken;
                 Request.Cookies.TryGetValue("refresh_token", out refreshToken);
                 var result = await service.RefreshTokenAsync(refreshToken ?? "", Response);
-                return ControllerHelper.FromStatusCode(this, result);
+                return Ok(result);
             }
             else
             {
                 var result = await service.RefreshTokenAsync(dto.Refresh, Response);
-                return ControllerHelper.FromStatusCode(this, result);
+                return Ok(result);
             }
         }
 
@@ -48,12 +48,12 @@ namespace Identity.Api.Controllers
                 string? refreshToken;
                 Request.Cookies.TryGetValue("refresh_token", out refreshToken);
                 var result = await service.LogoutAsync(refreshToken ?? "", Response);
-                return ControllerHelper.FromStatusCode(this, result);
+                return Ok(result);
             }
             else
             {
                 var result = await service.LogoutAsync(dto.Refresh, Response);
-                return ControllerHelper.FromStatusCode(this, result);
+                return Ok(result);
             }
         }
 
@@ -65,7 +65,7 @@ namespace Identity.Api.Controllers
             var role_id = User.FindFirst("role_id")?.Value ?? "";
 
             var result = await service.GetMeByUsernameAndRoleIdAsync(username, int.Parse(role_id));
-            return ControllerHelper.FromStatusCode(this, result);
+            return Ok(result);
 
         }
 

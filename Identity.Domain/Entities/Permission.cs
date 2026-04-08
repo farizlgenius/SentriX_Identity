@@ -16,7 +16,7 @@ public sealed class Permission
 
   public Permission(int id, string name, bool isEnabled, bool isCreated, bool isUpdated, bool isDeleted, DateTime createdAt, DateTime updatedAt)
   {
-    ValidationHelper.ValidateNotZero(id, nameof(id));
+    ValidationHelper.ValidateNotMinus(id, nameof(id));
     ValidationHelper.ValidateNotNullOrEmpty(name, nameof(name));
     Id = id;
     Name = name;

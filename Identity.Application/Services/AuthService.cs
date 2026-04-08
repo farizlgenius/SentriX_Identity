@@ -1,5 +1,6 @@
 using System;
 using Identity.Application.DTOs;
+using Identity.Application.Exceptions;
 using Identity.Application.Helpers;
 using Identity.Application.Interfaces;
 using Identity.Domain.Constants;
@@ -10,33 +11,33 @@ namespace Identity.Application.Services;
 
 public class AuthService(IAuthRepository repo, IJwtService service) : IAuthService
 {
-  public async Task<BaseDto> GetMeByUsernameAndRoleIdAsync(string username, int roleId)
+  public async Task<MeDto> GetMeByUsernameAndRoleIdAsync(string username, int roleId)
   {
     var locations = await repo.GetLocationsByUsernameAsync(username);
     var permissions = await repo.GetPermissionsByRoleIdAsync(roleId);
     return new MeDto(System.Net.HttpStatusCode.OK, AuthResponseMessage.GetMeSuccess, DateTime.UtcNow, locations, permissions);
   }
 
-  public async Task<BaseDto> LoginAsync(LoginDto loginDto, HttpResponse response)
+  public async Task<TokenDto> LoginAsync(LoginDto loginDto, HttpResponse response)
   {
     //Check username is empty
     if (string.IsNullOrEmpty(loginDto.Username))
-      return new BaseDto(System.Net.HttpStatusCode.BadRequest, AuthResponseMessage.UsernameCannotBeEmpty, DateTime.UtcNow);
+      throw new BadRequestException(AuthResponseMessage.UsernameCannotBeEmpty);
 
     //Check password is empty
     if (string.IsNullOrEmpty(loginDto.Password))
-      return new BaseDto(System.Net.HttpStatusCode.BadRequest, AuthResponseMessage.PasswordCannotBeEmpty, DateTime.UtcNow);
+      throw new BadRequestException(AuthResponseMessage.PasswordCannotBeEmpty);
 
     // Check username existence
     var userExists = await repo.IsAnyUserExistsAsync(loginDto.Username);
     if (!userExists)
-      return new BaseDto(System.Net.HttpStatusCode.NotFound, AuthResponseMessage.UserNotFound, DateTime.UtcNow);
+      throw new BadRequestException(AuthResponseMessage.UserNotFound);
 
     // Validate Password
     var pass = await repo.GetUserHashPasswordAsync(loginDto.Username);
     var isValidPassword = PasswordHasher.VerifyPassword(loginDto.Password, pass);
     if (!isValidPassword)
-      return new BaseDto(System.Net.HttpStatusCode.Unauthorized, AuthResponseMessage.InvalidCredentials, DateTime.UtcNow);
+      throw new BadRequestException(AuthResponseMessage.InvalidCredentials);
 
     // Get User
     var user = await repo.GetUserByUsernameAsync(loginDto.Username);
@@ -54,9 +55,6 @@ public class AuthService(IAuthRepository repo, IJwtService service) : IAuthServi
     });
 
     return new TokenDto(
-      System.Net.HttpStatusCode.OK,
-      AuthResponseMessage.LoginSuccess,
-      DateTime.UtcNow,
       token.AccessToken,
       token.RefreshToken,
       token.ExpiresAt
@@ -71,13 +69,13 @@ public class AuthService(IAuthRepository repo, IJwtService service) : IAuthServi
 
     // Validate token
     if (string.IsNullOrWhiteSpace(refresh.HashedToken))
-      return new BaseDto(System.Net.HttpStatusCode.NotFound, AuthResponseMessage.RefreshTokenNotFound, DateTime.UtcNow);
+      throw new NotFoundException(AuthResponseMessage.RefreshTokenNotFound);
 
     if (refresh.ExpiredAt < DateTime.UtcNow)
-      return new BaseDto(System.Net.HttpStatusCode.BadRequest, AuthResponseMessage.RefreshExpired, DateTime.UtcNow);
+      throw new BadRequestException(AuthResponseMessage.RefreshExpired);
 
     if (refresh.Action.Equals(TokenAction.REVOKE))
-      return new BaseDto(System.Net.HttpStatusCode.BadRequest, AuthResponseMessage.RefreshTokenInvalid, DateTime.UtcNow);
+      throw new BadRequestException(AuthResponseMessage.RefreshTokenInvalid);
 
     await service.RevokeTokenAsync(refreshToken);
 
@@ -92,19 +90,19 @@ public class AuthService(IAuthRepository repo, IJwtService service) : IAuthServi
     return new BaseDto(System.Net.HttpStatusCode.OK, AuthResponseMessage.LogoutSuccess, DateTime.UtcNow);
   }
 
-  public async Task<BaseDto> RefreshTokenAsync(string refreshToken, HttpResponse response)
+  public async Task<TokenDto> RefreshTokenAsync(string refreshToken, HttpResponse response)
   {
     var inCommingHashed = TokenHasher.Hash(refreshToken);
     var refresh = await service.GetRefreshTokenAsync(inCommingHashed);
     // Validate token
     if (string.IsNullOrWhiteSpace(refresh.HashedToken))
-      return new BaseDto(System.Net.HttpStatusCode.NotFound, AuthResponseMessage.RefreshTokenNotFound, DateTime.UtcNow);
+      throw new NotFoundException(AuthResponseMessage.RefreshTokenNotFound);
 
     if (refresh.ExpiredAt < DateTime.UtcNow)
-      return new BaseDto(System.Net.HttpStatusCode.BadRequest, AuthResponseMessage.RefreshExpired, DateTime.UtcNow);
+      throw new BadRequestException(AuthResponseMessage.RefreshExpired);
 
     if (refresh.Action.Equals(TokenAction.REVOKE))
-      return new BaseDto(System.Net.HttpStatusCode.BadRequest, AuthResponseMessage.RefreshTokenInvalid, DateTime.UtcNow);
+      throw new BadRequestException(AuthResponseMessage.RefreshTokenInvalid);
 
     // Generate token (for demonstration, using a simple string)
     var token = await service.RefreshTokenAsync(refresh);
@@ -119,9 +117,6 @@ public class AuthService(IAuthRepository repo, IJwtService service) : IAuthServi
     });
 
     return new TokenDto(
-      System.Net.HttpStatusCode.OK,
-      AuthResponseMessage.RefreshTokenSuccess,
-      DateTime.UtcNow,
       token.AccessToken,
       token.RefreshToken,
       token.ExpiresAt

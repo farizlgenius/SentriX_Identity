@@ -1,4 +1,5 @@
 using Identity.Api.Helpers;
+using Identity.Application.DTOs;
 using Identity.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -8,7 +9,7 @@ namespace Identity.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    // [Authorize]
     public class LocationController(ILocationService service) : ControllerBase
     {
         [HttpGet]
@@ -18,11 +19,25 @@ namespace Identity.Api.Controllers
             return Ok(res);
         }
 
+        [HttpGet("countries")]
+        public async Task<IActionResult> GetCountriesAsync([FromQuery] int Page, int PageSize)
+        {
+            var res = await service.GetCountriesPaginationAsync(Page, PageSize);
+            return Ok(res);
+        }
+
         [HttpGet("pagination")]
         public async Task<IActionResult> GetPaginationAsync([FromQuery] int Page, int PageSize)
         {
             var res = await service.GetPaginationAsync(Page, PageSize);
-            return Ok();
+            return Ok(res);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateAsync([FromBody] LocationDto dto)
+        {
+            var res = await service.CreateAsync(dto);
+            return Ok(res);
         }
 
 

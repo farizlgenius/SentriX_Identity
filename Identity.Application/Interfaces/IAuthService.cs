@@ -6,9 +6,9 @@ namespace Identity.Application.Interfaces;
 
 public interface IAuthService
 {
-  Task<BaseDto> LoginAsync(LoginDto loginDto, HttpResponse httpResponse);
-  Task<BaseDto> RefreshTokenAsync(string refreshToken, HttpResponse httpResponse);
+  Task<TokenDto> LoginAsync(LoginDto loginDto, HttpResponse httpResponse);
+  Task<TokenDto> RefreshTokenAsync(string refreshToken, HttpResponse httpResponse);
   Task<BaseDto> LogoutAsync(string refreshToken, HttpResponse response);
-  Task<BaseDto> GetMeByUsernameAndRoleIdAsync(string username, int roleId);
+  Task<MeDto> GetMeByUsernameAndRoleIdAsync(string username, int roleId);
 
 }
