@@ -40,6 +40,20 @@ namespace Identity.Api.Controllers
             return Ok(res);
         }
 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteByIdAsync(int id)
+        {
+            var res = await service.DeleteByIdAsync(id);
+            return Ok(res);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateAsync([FromBody] LocationDto dto)
+        {
+            var res = await service.UpdateAsync(dto);
+            return Ok(res);
+        }
+
 
     }
 }

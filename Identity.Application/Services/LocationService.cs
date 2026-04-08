@@ -43,9 +43,39 @@ public class LocationService(ILocationRepository repo) : ILocationService
     return await repo.AddAsync(domain);
   }
 
-  public async Task<PaginationDto<LocationDto>> GetCountriesPaginationAsync(int Page, int PageSize)
+  public async Task<PaginationDto<CountryDto>> GetCountriesPaginationAsync(int Page, int PageSize)
   {
     var res = await repo.GetCountriesPaginationAsync(Page, PageSize);
     return res;
+  }
+
+  public async Task<LocationDto> DeleteByIdAsync(int id)
+  {
+    if (!await repo.IsAnyByIdAsync(id))
+      throw new NotFoundException(LocationResponseMessage.LocationNotFound);
+
+    return await repo.DeleteByIdAsync(id);
+  }
+
+  public async Task<LocationDto> UpdateAsync(LocationDto dto)
+  {
+
+    if (!await repo.IsAnyByIdAsync(dto.Id ?? 0))
+      throw new NotFoundException(LocationResponseMessage.LocationNotFound);
+
+    if (string.IsNullOrWhiteSpace(dto.Name))
+      throw new BadRequestException(LocationResponseMessage.NameEmpty);
+    if (await repo.IsAnyNameAsync(dto.Name))
+      throw new BadRequestException(LocationResponseMessage.DuplicatedName);
+
+    // Check country id is valid
+    if (!await repo.IsValidCountryAsync(dto.CountryId))
+      throw new BadRequestException(LocationResponseMessage.CountryInvalid);
+
+    var domain = new Location(dto.Id ?? 0, StringHelper.ToCapital(dto.Name.Trim()), dto.CountryId, dto.Description);
+
+    return await repo.UpdateAsync(domain);
+
+
   }
 }

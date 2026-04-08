@@ -2,6 +2,7 @@ using System;
 using Identity.Application.DTOs;
 using Identity.Application.Exceptions;
 using Identity.Domain.Constants;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Identity.Api.Middlewares;
 
@@ -26,6 +27,15 @@ public sealed class GlobalException : IMiddleware
       case BadRequestException:
         await BadRequestExceptionHandler(context, ex);
         break;
+      case UnauthorizedAccessException:
+        await UnauthorizedAccessExceptionHandler(context, ex);
+        break;
+      case ForbiddenException:
+        await ForbiddenExceptionHandler(context, ex);
+        break;
+      case NotFoundException:
+        await NotFoundExceptionHandler(context, ex);
+        break;
       default:
         await HandleException(context, ex);
         break;
@@ -42,6 +52,45 @@ public sealed class GlobalException : IMiddleware
     context.Response.ContentType = "application/json";
 
     var response = new BaseDto(System.Net.HttpStatusCode.BadRequest, ex.Message, DateTime.UtcNow);
+    return context.Response.WriteAsJsonAsync(response);
+  }
+
+  private Task UnauthorizedAccessExceptionHandler(HttpContext context, Exception ex)
+  {
+    // Log the exception (you can use a logging framework here)
+    Console.WriteLine($"An error occurred: {ex.Message}");
+
+    // Set the response status code and content
+    context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+    context.Response.ContentType = "application/json";
+
+    var response = new BaseDto(System.Net.HttpStatusCode.Unauthorized, ex.Message, DateTime.UtcNow);
+    return context.Response.WriteAsJsonAsync(response);
+  }
+
+  private Task NotFoundExceptionHandler(HttpContext context, Exception ex)
+  {
+    // Log the exception (you can use a logging framework here)
+    Console.WriteLine($"An error occurred: {ex.Message}");
+
+    // Set the response status code and content
+    context.Response.StatusCode = StatusCodes.Status404NotFound;
+    context.Response.ContentType = "application/json";
+
+    var response = new BaseDto(System.Net.HttpStatusCode.NotFound, ex.Message, DateTime.UtcNow);
+    return context.Response.WriteAsJsonAsync(response);
+  }
+
+  private Task ForbiddenExceptionHandler(HttpContext context, Exception ex)
+  {
+    // Log the exception (you can use a logging framework here)
+    Console.WriteLine($"An error occurred: {ex.Message}");
+
+    // Set the response status code and content
+    context.Response.StatusCode = StatusCodes.Status403Forbidden;
+    context.Response.ContentType = "application/json";
+
+    var response = new BaseDto(System.Net.HttpStatusCode.Forbidden, ex.Message, DateTime.UtcNow);
     return context.Response.WriteAsJsonAsync(response);
   }
 

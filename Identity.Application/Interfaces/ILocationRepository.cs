@@ -12,4 +12,7 @@ public interface ILocationRepository
   Task<bool> IsAnyNameAsync(string name);
   Task<LocationDto> AddAsync(Location location);
   Task<bool> IsValidCountryAsync(int id);
+  Task<bool> IsAnyByIdAsync(int id);
+  Task<LocationDto> DeleteByIdAsync(int id);
+  Task<LocationDto> UpdateAsync(Location location);
 }
