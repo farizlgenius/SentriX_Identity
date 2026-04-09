@@ -10,14 +10,12 @@ public sealed class Company
   public string Address { get; private set; } = string.Empty;
   public string Description { get; private set; } = string.Empty;
   public int LocationId { get; private set; }
-  public string LocationName { get; private set; } = string.Empty;
   public Company(
     int id,
     string name,
     string address,
     string description,
-    int locationId,
-    string locationName)
+    int locationId)
   {
     ValidationHelper.ValidateNotMinus(id, nameof(id));
     ValidationHelper.ValidateNotNullOrEmpty(name, nameof(name));
@@ -26,7 +24,7 @@ public sealed class Company
     Name = name;
     Address = address;
     Description = description;
-    LocationName = locationName;
-  }
+    LocationId = locationId;
 
+  }
 }

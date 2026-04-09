@@ -26,7 +26,7 @@ public class LocationService(ILocationRepository repo) : ILocationService
     return res;
   }
 
-  public async Task<LocationDto> CreateAsync(LocationDto dto)
+  public async Task<LocationDto> CreateAsync(CreateLocationDto dto)
   {
     // Name must not be the same
     if (string.IsNullOrWhiteSpace(dto.Name))
@@ -60,7 +60,7 @@ public class LocationService(ILocationRepository repo) : ILocationService
   public async Task<LocationDto> UpdateAsync(LocationDto dto)
   {
 
-    if (!await repo.IsAnyByIdAsync(dto.Id ?? 0))
+    if (!await repo.IsAnyByIdAsync(dto.Id))
       throw new NotFoundException(ResponseMessage.LocationNotFound);
 
     if (string.IsNullOrWhiteSpace(dto.Name))
@@ -72,7 +72,7 @@ public class LocationService(ILocationRepository repo) : ILocationService
     if (!await repo.IsValidCountryAsync(dto.CountryId))
       throw new BadRequestException(ResponseMessage.CountryInvalid);
 
-    var domain = new Location(dto.Id ?? 0, StringHelper.ToCapital(dto.Name.Trim()), dto.CountryId, dto.Description);
+    var domain = new Location(dto.Id, StringHelper.ToCapital(dto.Name.Trim()), dto.CountryId, dto.Description);
 
     return await repo.UpdateAsync(domain);
 

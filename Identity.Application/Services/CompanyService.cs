@@ -9,7 +9,7 @@ namespace Identity.Application.Services;
 
 public class CompanyService(ICompanyRepository repo) : ICompanyService
 {
-      public async Task<CompanyDto> CreateAsync(CompanyDto dto)
+      public async Task<CompanyDto> CreateAsync(CreateCompanyDto dto)
       {
             if (string.IsNullOrWhiteSpace(dto.Name))
                   throw new BadRequestException(ResponseMessage.NameEmpty);
@@ -17,7 +17,7 @@ public class CompanyService(ICompanyRepository repo) : ICompanyService
             if (!await repo.IsAnyLocationWithIdAsync(dto.LocationId))
                   throw new BadRequestException(ResponseMessage.LocationInvalid);
 
-            var domain = new Company(0, dto.Name.Trim(), dto.Address, dto.Description, dto.LocationId, dto.LocationName);
+            var domain = new Company(0, dto.Name.Trim(), dto.Address, dto.Description, dto.LocationId);
 
             return await repo.AddAsync(domain);
 
@@ -42,7 +42,7 @@ public class CompanyService(ICompanyRepository repo) : ICompanyService
 
       public async Task<CompanyDto> UpdateAsync(CompanyDto dto)
       {
-            if (!await repo.IsAnyWithIdAsync(dto.Id ?? 0))
+            if (!await repo.IsAnyWithIdAsync(dto.Id))
                   throw new BadRequestException(ResponseMessage.RecordNotFound);
 
             if (string.IsNullOrWhiteSpace(dto.Name))
@@ -51,7 +51,7 @@ public class CompanyService(ICompanyRepository repo) : ICompanyService
             if (!await repo.IsAnyLocationWithIdAsync(dto.LocationId))
                   throw new BadRequestException(ResponseMessage.LocationInvalid);
 
-            var domain = new Company(dto.Id ?? 0, dto.Name, dto.Address, dto.Description, dto.LocationId, dto.LocationName);
+            var domain = new Company(dto.Id, dto.Name, dto.Address, dto.Description, dto.LocationId);
 
             return await repo.UpdateAsync(domain);
       }

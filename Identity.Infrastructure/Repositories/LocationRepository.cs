@@ -19,11 +19,11 @@ public class LocationRepository(AppDbContext context) : ILocationRepository
       throw new Exception(DbExceptionMessage.SaveRecordUnsuccessful);
 
     return new LocationDto(
+      data.Entity.id,
       data.Entity.name,
       data.Entity.description,
       data.Entity.country_id,
-    await context.Countries.AsNoTracking().OrderByDescending(c => c.id).Where(c => c.id == data.Entity.country_id).Select(c => c.name).FirstOrDefaultAsync() ?? ""
-    , data.Entity.id);
+    await context.Countries.AsNoTracking().OrderByDescending(c => c.id).Where(c => c.id == data.Entity.country_id).Select(c => c.name).FirstOrDefaultAsync() ?? "");
 
   }
 
@@ -38,18 +38,19 @@ public class LocationRepository(AppDbContext context) : ILocationRepository
       throw new Exception(DbExceptionMessage.SaveRecordUnsuccessful);
 
     return new LocationDto(
-      data.Entity.name,
-      data.Entity.description,
-      data.Entity.country_id,
-    await context.Countries.AsNoTracking().OrderByDescending(c => c.id).Where(c => c.id == data.Entity.country_id).Select(c => c.name).FirstOrDefaultAsync() ?? ""
-    , data.Entity.id);
+  data.Entity.id,
+  data.Entity.name,
+  data.Entity.description,
+  data.Entity.country_id,
+await context.Countries.AsNoTracking().OrderByDescending(c => c.id).Where(c => c.id == data.Entity.country_id).Select(c => c.name).FirstOrDefaultAsync() ?? "");
+
   }
 
   public async Task<List<LocationDto>> GetAsync()
   {
     return await context.Locations
     .AsNoTracking()
-    .Select(x => new LocationDto(x.name, x.description, x.country_id, x.country.name, x.id))
+    .Select(x => new LocationDto(x.id, x.name, x.description, x.country_id, x.country.name))
     .ToListAsync();
 
   }
@@ -76,7 +77,7 @@ public class LocationRepository(AppDbContext context) : ILocationRepository
     .OrderByDescending(x => x.id)
     .Skip((Page - 1) * PageSize)
     .Take(PageSize)
-    .Select(x => new LocationDto(x.name, x.description, x.country_id, x.country.name, x.id))
+    .Select(x => new LocationDto(x.id, x.name, x.description, x.country_id, x.country.name))
     .ToListAsync();
 
     return new PaginationDto<LocationDto>(Page, PageSize, totalItems, (int)Math.Ceiling(totalItems / (double)PageSize), items);
@@ -115,11 +116,12 @@ public class LocationRepository(AppDbContext context) : ILocationRepository
 
 
     return new LocationDto(
-      data.Entity.name,
-      data.Entity.description,
-      data.Entity.country_id,
-    await context.Countries.AsNoTracking().OrderByDescending(c => c.id).Where(c => c.id == data.Entity.country_id).Select(c => c.name).FirstOrDefaultAsync() ?? ""
-    , data.Entity.id);
+  data.Entity.id,
+  data.Entity.name,
+  data.Entity.description,
+  data.Entity.country_id,
+await context.Countries.AsNoTracking().OrderByDescending(c => c.id).Where(c => c.id == data.Entity.country_id).Select(c => c.name).FirstOrDefaultAsync() ?? "");
+
 
   }
 }

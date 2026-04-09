@@ -34,7 +34,7 @@ namespace Identity.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAsync([FromBody] LocationDto dto)
+        public async Task<IActionResult> CreateAsync([FromBody] CreateLocationDto dto)
         {
             var res = await service.CreateAsync(dto);
             return Ok(res);

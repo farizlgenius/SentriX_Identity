@@ -21,12 +21,12 @@ public sealed class CompanyRepository(AppDbContext context) : ICompanyRepository
                   throw new Exception(DbExceptionMessage.SaveRecordUnsuccessful);
 
             return new CompanyDto(
+                  data.Entity.id,
               data.Entity.name,
               data.Entity.description,
               data.Entity.address,
               data.Entity.location_id,
-            await context.Locations.AsNoTracking().OrderByDescending(c => c.id).Where(c => c.id == data.Entity.location_id).Select(c => c.name).FirstOrDefaultAsync() ?? ""
-            , data.Entity.id);
+            await context.Locations.AsNoTracking().OrderByDescending(c => c.id).Where(c => c.id == data.Entity.location_id).Select(c => c.name).FirstOrDefaultAsync() ?? "");
       }
 
       public async Task<CompanyDto> DeleteByIdAsync(int id)
@@ -38,12 +38,12 @@ public sealed class CompanyRepository(AppDbContext context) : ICompanyRepository
             var save = await context.SaveChangesAsync();
 
             return new CompanyDto(
+                  data.Entity.id,
               data.Entity.name,
               data.Entity.description,
               data.Entity.address,
               data.Entity.location_id,
-            await context.Locations.AsNoTracking().OrderByDescending(c => c.id).Where(c => c.id == data.Entity.location_id).Select(c => c.name).FirstOrDefaultAsync() ?? ""
-            , data.Entity.id);
+            await context.Locations.AsNoTracking().OrderByDescending(c => c.id).Where(c => c.id == data.Entity.location_id).Select(c => c.name).FirstOrDefaultAsync() ?? "");
 
       }
 
@@ -57,7 +57,7 @@ public sealed class CompanyRepository(AppDbContext context) : ICompanyRepository
                   .OrderByDescending(x => x.id)
                   .Skip((Page - 1) * PageSize)
                   .Take(PageSize)
-                  .Select(x => new CompanyDto(x.name, x.address, x.description, x.location_id, x.location.name, x.id))
+                  .Select(x => new CompanyDto(x.id, x.name, x.address, x.description, x.location_id, x.location.name))
                   .ToListAsync();
 
             return new PaginationDto<CompanyDto>(Page, PageSize, totalItems, (int)Math.Ceiling(totalItems / (double)PageSize), items);
@@ -83,11 +83,11 @@ public sealed class CompanyRepository(AppDbContext context) : ICompanyRepository
             var save = await context.SaveChangesAsync();
 
             return new CompanyDto(
+                  data.Entity.id,
               data.Entity.name,
               data.Entity.description,
               data.Entity.address,
               data.Entity.location_id,
-            await context.Locations.AsNoTracking().OrderByDescending(c => c.id).Where(c => c.id == data.Entity.location_id).Select(c => c.name).FirstOrDefaultAsync() ?? ""
-            , data.Entity.id);
+            await context.Locations.AsNoTracking().OrderByDescending(c => c.id).Where(c => c.id == data.Entity.location_id).Select(c => c.name).FirstOrDefaultAsync() ?? "");
       }
 }

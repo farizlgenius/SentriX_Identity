@@ -1,4 +1,5 @@
 using System;
+using System.Net;
 using Identity.Application.DTOs;
 using Identity.Application.Exceptions;
 using Identity.Domain.Constants;
@@ -103,8 +104,26 @@ public sealed class GlobalException : IMiddleware
     context.Response.StatusCode = StatusCodes.Status500InternalServerError;
     context.Response.ContentType = "application/json";
 
-    var response = new BaseDto(System.Net.HttpStatusCode.InternalServerError, ex.Message, DateTime.UtcNow);
-    return context.Response.WriteAsJsonAsync(response);
+    if (ex.InnerException is null)
+    {
+      return context.Response.WriteAsJsonAsync(new BaseDto(System.Net.HttpStatusCode.InternalServerError, $"Exception : {ex.Message} \n {(ex.InnerException is null ? "" : "InnerException : " + ex.InnerException.Message)}", DateTime.UtcNow));
+    }
+    else
+    {
+      return context.Response.WriteAsJsonAsync(
+        new
+        {
+          Code = HttpStatusCode.InternalServerError,
+          Timestamp = DateTime.UtcNow,
+          Details = new
+          {
+            Exception = ex.Message,
+            InnerException = ex.InnerException.Message
+          }
+        }
+      );
+    }
+
   }
 
 

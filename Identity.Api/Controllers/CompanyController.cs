@@ -17,7 +17,7 @@ namespace Identity.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAsync([FromBody] CompanyDto dto)
+        public async Task<IActionResult> CreateAsync([FromBody] CreateCompanyDto dto)
         {
             var res = await service.CreateAsync(dto);
             return Ok(res);
