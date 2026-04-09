@@ -6,7 +6,6 @@ public sealed class Company : BaseEntity
 {
   public string name { get; set; } = string.Empty;
   public string address { get; set; } = string.Empty;
-  public string postal_code { get; set; } = string.Empty;
   public string description { get; set; } = string.Empty;
   public ICollection<User> users { get; set; } = new List<User>();
 
@@ -27,7 +26,6 @@ public sealed class Company : BaseEntity
   {
     name = company.Name;
     address = company.Address;
-    postal_code = company.PostalCode;
     description = company.Description;
     updated_at = DateTime.UtcNow;
   }

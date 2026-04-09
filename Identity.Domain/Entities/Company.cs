@@ -8,7 +8,6 @@ public sealed class Company
   public int Id { get; private set; }
   public string Name { get; private set; } = string.Empty;
   public string Address { get; private set; } = string.Empty;
-  public string PostalCode { get; private set; } = string.Empty;
   public string Description { get; private set; } = string.Empty;
   public DateTime CreatedAt { get; private set; }
   public DateTime UpdatedAt { get; private set; }
@@ -26,7 +25,6 @@ public sealed class Company
     Id = id;
     Name = name;
     Address = address;
-    PostalCode = postalCode;
     Description = description;
     CreatedAt = createdAt;
     UpdatedAt = updatedAt;
