@@ -56,7 +56,7 @@ public class LocationRepository(AppDbContext context) : ILocationRepository
 
   public async Task<PaginationDto<CountryDto>> GetCountriesPaginationAsync(int Page, int PageSize)
   {
-    var query = context.Countries.AsQueryable();
+    var query = context.Countries.AsNoTracking().AsQueryable();
     var totalItems = await query.CountAsync();
     var items = await query
     .OrderByDescending(x => x.id)
@@ -70,7 +70,7 @@ public class LocationRepository(AppDbContext context) : ILocationRepository
 
   public async Task<PaginationDto<LocationDto>> GetPaginationAsync(int Page, int PageSize)
   {
-    var query = context.Locations.AsQueryable();
+    var query = context.Locations.AsNoTracking().AsQueryable();
     var totalItems = await query.CountAsync();
     var items = await query
     .OrderByDescending(x => x.id)
