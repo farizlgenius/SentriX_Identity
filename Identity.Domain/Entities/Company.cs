@@ -9,25 +9,24 @@ public sealed class Company
   public string Name { get; private set; } = string.Empty;
   public string Address { get; private set; } = string.Empty;
   public string Description { get; private set; } = string.Empty;
-  public DateTime CreatedAt { get; private set; }
-  public DateTime UpdatedAt { get; private set; }
+  public int LocationId { get; private set; }
+  public string LocationName { get; private set; } = string.Empty;
   public Company(
     int id,
     string name,
     string address,
-    string postalCode,
     string description,
-    DateTime createdAt,
-    DateTime updatedAt)
+    int locationId,
+    string locationName)
   {
     ValidationHelper.ValidateNotMinus(id, nameof(id));
     ValidationHelper.ValidateNotNullOrEmpty(name, nameof(name));
+    ValidationHelper.ValidateNotMinus(locationId, nameof(LocationId));
     Id = id;
     Name = name;
     Address = address;
     Description = description;
-    CreatedAt = createdAt;
-    UpdatedAt = updatedAt;
+    LocationName = locationName;
   }
 
 }

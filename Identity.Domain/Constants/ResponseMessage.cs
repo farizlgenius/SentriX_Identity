@@ -4,10 +4,12 @@ namespace Identity.Domain.Constants;
 
 public class ResponseMessage
 {
-  public const string InternalServerError = "An unexpected error occurred. Please try again later.";
-  public const string BadRequest = "The request was invalid. Please check the data and try again.";
-  public const string NotFound = "The requested resource was not found.";
-  public const string Unauthorized = "You are not authorized to access this resource.";
-  public const string Forbidden = "You do not have permission to access this resource.";
+
+  public static string NameEmpty = "Name must not empty.";
+  public static string DuplicatedName = "Found duplicate name.";
+  public static string CountryInvalid = "Country invalid.";
+  public static string LocationNotFound = "Location not found.";
+  public const string LocationInvalid = "Location invalid.";
+  public const string RecordNotFound = "Record not found.";
 
 }

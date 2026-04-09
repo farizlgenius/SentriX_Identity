@@ -30,13 +30,13 @@ public class LocationService(ILocationRepository repo) : ILocationService
   {
     // Name must not be the same
     if (string.IsNullOrWhiteSpace(dto.Name))
-      throw new BadRequestException(LocationResponseMessage.NameEmpty);
+      throw new BadRequestException(ResponseMessage.NameEmpty);
     if (await repo.IsAnyNameAsync(dto.Name))
-      throw new BadRequestException(LocationResponseMessage.DuplicatedName);
+      throw new BadRequestException(ResponseMessage.DuplicatedName);
 
     // Check country id is valid
     if (!await repo.IsValidCountryAsync(dto.CountryId))
-      throw new BadRequestException(LocationResponseMessage.CountryInvalid);
+      throw new BadRequestException(ResponseMessage.CountryInvalid);
 
     var domain = new Location(0, StringHelper.ToCapital(dto.Name.Trim()), dto.CountryId, dto.Description);
 
@@ -52,7 +52,7 @@ public class LocationService(ILocationRepository repo) : ILocationService
   public async Task<LocationDto> DeleteByIdAsync(int id)
   {
     if (!await repo.IsAnyByIdAsync(id))
-      throw new NotFoundException(LocationResponseMessage.LocationNotFound);
+      throw new NotFoundException(ResponseMessage.LocationNotFound);
 
     return await repo.DeleteByIdAsync(id);
   }
@@ -61,16 +61,16 @@ public class LocationService(ILocationRepository repo) : ILocationService
   {
 
     if (!await repo.IsAnyByIdAsync(dto.Id ?? 0))
-      throw new NotFoundException(LocationResponseMessage.LocationNotFound);
+      throw new NotFoundException(ResponseMessage.LocationNotFound);
 
     if (string.IsNullOrWhiteSpace(dto.Name))
-      throw new BadRequestException(LocationResponseMessage.NameEmpty);
+      throw new BadRequestException(ResponseMessage.NameEmpty);
     if (await repo.IsAnyNameAsync(dto.Name))
-      throw new BadRequestException(LocationResponseMessage.DuplicatedName);
+      throw new BadRequestException(ResponseMessage.DuplicatedName);
 
     // Check country id is valid
     if (!await repo.IsValidCountryAsync(dto.CountryId))
-      throw new BadRequestException(LocationResponseMessage.CountryInvalid);
+      throw new BadRequestException(ResponseMessage.CountryInvalid);
 
     var domain = new Location(dto.Id ?? 0, StringHelper.ToCapital(dto.Name.Trim()), dto.CountryId, dto.Description);
 

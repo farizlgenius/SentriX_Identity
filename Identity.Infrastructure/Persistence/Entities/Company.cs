@@ -21,12 +21,20 @@ public sealed class Company : BaseEntity
   /// </summary>
 
   public Company() { }
+  public Company(Domain.Entities.Company domain)
+  {
+    name = domain.Name;
+    address = domain.Address;
+    description = domain.Description;
+    location_id = domain.LocationId;
+  }
 
   public void Update(Identity.Domain.Entities.Company company)
   {
     name = company.Name;
     address = company.Address;
     description = company.Description;
+    location_id = company.LocationId;
     updated_at = DateTime.UtcNow;
   }
 

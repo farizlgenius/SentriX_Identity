@@ -31,7 +31,7 @@ public class LocationRepository(AppDbContext context) : ILocationRepository
   {
     var record = await context.Locations.OrderByDescending(l => l.id).FirstOrDefaultAsync(l => l.id == id);
     if (record is null)
-      throw new NotFoundException(LocationResponseMessage.LocationNotFound);
+      throw new NotFoundException(DbExceptionMessage.RecordNotFound);
     var data = context.Locations.Remove(record);
     var save = await context.SaveChangesAsync();
     if (data is null || save <= 0)
@@ -104,7 +104,7 @@ public class LocationRepository(AppDbContext context) : ILocationRepository
   {
     var record = await context.Locations.OrderByDescending(l => l.id).FirstOrDefaultAsync(l => l.id == location.Id);
     if (record is null)
-      throw new NotFoundException(LocationResponseMessage.LocationNotFound);
+      throw new NotFoundException(DbExceptionMessage.RecordNotFound);
 
     record.Update(location);
 
