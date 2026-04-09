@@ -15,10 +15,20 @@ public sealed class Department : BaseEntity
   /// Relation
   /// </summary>
   public Department() { }
-  public void Update(Identity.Domain.Entities.Department department)
+
+  public Department(Domain.Entities.Department domain)
   {
-    name = department.Name;
-    description = department.Description;
+    name = domain.Name;
+    description = domain.Description;
+    company_id = domain.CompanyId;
+    created_at = DateTime.UtcNow;
+    updated_at = DateTime.UtcNow;
+  }
+  public void Update(Identity.Domain.Entities.Department domain)
+  {
+    name = domain.Name;
+    description = domain.Description;
+    company_id = domain.CompanyId;
     updated_at = DateTime.UtcNow;
   }
 

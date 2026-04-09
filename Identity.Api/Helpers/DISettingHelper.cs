@@ -20,6 +20,7 @@ public class DISettingHelper
     builder.Services.AddScoped<IRefreshTokenAuditRepository, RefreshTokenAuditRepository>();
     builder.Services.AddScoped<ILocationRepository, LocationRepository>();
     builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
+    builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
 
     // ==========================
     // Adding Service
@@ -30,6 +31,7 @@ public class DISettingHelper
     builder.Services.AddScoped<IUserService, UserService>();
     builder.Services.AddScoped<ILocationService, LocationService>();
     builder.Services.AddScoped<ICompanyService, CompanyService>();
+    builder.Services.AddScoped<IDepartmentService, DepartmentService>();
 
     // ==========================
     // Custom Service
