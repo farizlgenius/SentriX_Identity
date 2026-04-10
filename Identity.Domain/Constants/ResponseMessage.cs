@@ -12,5 +12,6 @@ public class ResponseMessage
   public static string LocationInvalid = "Location invalid.";
   public static string RecordNotFound = "Record not found.";
   public static string QueryIdInvalid = "Query id invalid.";
+  public static string DepartmentInvalid = "Department invalid.";
 
 }

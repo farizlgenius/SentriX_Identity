@@ -8,17 +8,15 @@ public sealed class Position
   public int Id { get; private set; }
   public string Name { get; private set; } = string.Empty;
   public string Description { get; private set; } = string.Empty;
-  public DateTime CreatedAt { get; private set; }
-  public DateTime UpdatedAt { get; private set; }
+  public int DepartmentId { get; private set; }
 
-  public Position(int id, string name, string description, DateTime createdAt, DateTime updatedAt)
+  public Position(int id, string name, string description, int departmentId)
   {
     ValidationHelper.ValidateNotMinus(id, nameof(id));
     ValidationHelper.ValidateNotNullOrEmpty(name, nameof(name));
     Id = id;
     Name = name;
     Description = description;
-    CreatedAt = createdAt;
-    UpdatedAt = updatedAt;
+    DepartmentId = departmentId;
   }
 }
