@@ -65,8 +65,6 @@ public class LocationService(ILocationRepository repo) : ILocationService
 
     if (string.IsNullOrWhiteSpace(dto.Name))
       throw new BadRequestException(ResponseMessage.NameEmpty);
-    if (await repo.IsAnyNameAsync(dto.Name))
-      throw new BadRequestException(ResponseMessage.DuplicatedName);
 
     // Check country id is valid
     if (!await repo.IsValidCountryAsync(dto.CountryId))

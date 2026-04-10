@@ -106,7 +106,7 @@ public sealed class GlobalException : IMiddleware
 
     if (ex.InnerException is null)
     {
-      return context.Response.WriteAsJsonAsync(new BaseDto(System.Net.HttpStatusCode.InternalServerError, $"Exception : {ex.Message} \n {(ex.InnerException is null ? "" : "InnerException : " + ex.InnerException.Message)}", DateTime.UtcNow));
+      return context.Response.WriteAsJsonAsync(new BaseDto(System.Net.HttpStatusCode.InternalServerError, ex.Message, DateTime.UtcNow));
     }
     else
     {

@@ -14,9 +14,31 @@ public sealed class Permission : BaseEntity
   public bool is_deleted { get; set; }
 
   public Permission() { }
-  public void Update(Identity.Domain.Entities.Permission permission)
+
+  public Permission(Domain.Entities.Permission domain)
   {
-    role_id = permission.Id;
+    feature_id = domain.Id;
+    is_created = domain.IsCreated;
+    is_enabled = domain.IsEnabled;
+    is_deleted = domain.IsDeleted;
+    is_updated = domain.IsUpdated;
+    created_at = DateTime.UtcNow;
+    updated_at = DateTime.UtcNow;
+  }
+  public Permission(int RoleId, Domain.Entities.Permission domain)
+  {
+    role_id = RoleId;
+    feature_id = domain.Id;
+    is_created = domain.IsCreated;
+    is_enabled = domain.IsEnabled;
+    is_deleted = domain.IsDeleted;
+    is_updated = domain.IsUpdated;
+    created_at = DateTime.UtcNow;
+    updated_at = DateTime.UtcNow;
+  }
+  public void Update(int RoleId, Identity.Domain.Entities.Permission permission)
+  {
+    role_id = RoleId;
     feature_id = permission.Id;
     is_enabled = permission.IsEnabled;
     is_created = permission.IsCreated;

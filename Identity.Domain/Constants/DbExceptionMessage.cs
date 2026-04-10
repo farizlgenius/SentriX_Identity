@@ -9,4 +9,5 @@ public static class DbExceptionMessage
   public static string DeleteRecordUnsuccessful = "Delete record unsuccessful.";
   public static string UpdateRecordUnsuccessful = "Update record unsuccessful.";
   public static string QueryIdInvalid = "Query id invalid.";
+  public static string DeleteRelateRecordUnsuccessful = "Delete old related record unsuccessful.";
 }

@@ -6,17 +6,15 @@ public sealed class Role
 {
   public int Id { get; private set; }
   public string Name { get; private set; } = string.Empty;
-  public string Description { get; private set; } = string.Empty;
-  public DateTime CreatedAt { get; private set; }
-  public DateTime UpdatedAt { get; private set; }
+  public List<Permission> Permissions { get; private set; } = new List<Permission>();
+  public int LocationId { get; private set; }
 
-  public Role(int id, string name, string description, DateTime createdAt, DateTime updatedAt)
+  public Role(int id, string name, List<Permission> permissions, int locationId)
   {
     Id = id;
     Name = name;
-    Description = description;
-    CreatedAt = createdAt;
-    UpdatedAt = updatedAt;
+    Permissions = permissions;
+    LocationId = locationId;
   }
 
 }

@@ -22,6 +22,7 @@ public class DISettingHelper
     builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
     builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
     builder.Services.AddScoped<IPositionRepository, PositionRepository>();
+    builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 
     // ==========================
     // Adding Service
@@ -34,6 +35,7 @@ public class DISettingHelper
     builder.Services.AddScoped<ICompanyService, CompanyService>();
     builder.Services.AddScoped<IDepartmentService, DepartmentService>();
     builder.Services.AddScoped<IPositionService, PositionService>();
+    builder.Services.AddScoped<IRoleService, RoleService>();
 
     // ==========================
     // Custom Service

@@ -58,6 +58,12 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
       .HasForeignKey(c => c.location_id)
       .OnDelete(DeleteBehavior.Cascade);
 
+    modelBuilder.Entity<Location>()
+    .HasMany(l => l.roles)
+    .WithOne(r => r.location)
+    .HasForeignKey(r => r.location_id)
+    .OnDelete(DeleteBehavior.Cascade);
+
     modelBuilder.Entity<Country>()
       .HasMany(c => c.locations)
       .WithOne(l => l.country)
@@ -325,7 +331,7 @@ new Country { id = 177, name = "Zimbabwe", code = "ZW" }
 
     modelBuilder.Entity<Role>()
     .HasData(
-      new Role { id = 1, name = "Administrator", description = "System Administrator" }
+      new Role { id = 1, name = "Administrator", location_id = 1 }
     );
 
     modelBuilder.Entity<Location>()

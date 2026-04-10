@@ -11,10 +11,8 @@ public sealed class Permission
   public bool IsCreated { get; private set; }
   public bool IsUpdated { get; private set; }
   public bool IsDeleted { get; private set; }
-  public DateTime CreatedAt { get; private set; }
-  public DateTime UpdatedAt { get; private set; }
 
-  public Permission(int id, string name, bool isEnabled, bool isCreated, bool isUpdated, bool isDeleted, DateTime createdAt, DateTime updatedAt)
+  public Permission(int id, string name, bool isEnabled, bool isCreated, bool isUpdated, bool isDeleted)
   {
     ValidationHelper.ValidateNotMinus(id, nameof(id));
     ValidationHelper.ValidateNotNullOrEmpty(name, nameof(name));
@@ -24,7 +22,5 @@ public sealed class Permission
     IsCreated = isCreated;
     IsUpdated = isUpdated;
     IsDeleted = isDeleted;
-    CreatedAt = createdAt;
-    UpdatedAt = updatedAt;
   }
 }
