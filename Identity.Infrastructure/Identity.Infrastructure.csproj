@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Persistence/Entities/" />
     <Folder Include="Repositories/" />
   </ItemGroup>
 

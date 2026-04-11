@@ -9,7 +9,7 @@ public sealed class Department : BaseEntity
   public int company_id { get; set; }
   public Company company { get; set; } = null!;
   public ICollection<Position> positions { get; set; } = new List<Position>();
-  public ICollection<User> users { get; set; } = new List<User>();
+  public ICollection<Operator> operators { get; set; } = new List<Operator>();
 
   /// <summary>
   /// Relation

@@ -14,10 +14,11 @@ public class CompanyService(ICompanyRepository repo) : ICompanyService
             if (string.IsNullOrWhiteSpace(dto.Name))
                   throw new BadRequestException(ResponseMessage.NameEmpty);
 
-            if (!await repo.IsAnyLocationWithIdAsync(dto.LocationId))
-                  throw new BadRequestException(ResponseMessage.LocationInvalid);
+            if (await repo.IsAnyWithNameAsync(dto.Name))
+                  throw new BadRequestException(ResponseMessage.DuplicatedName);
 
-            var domain = new Company(0, dto.Name.Trim(), dto.Address, dto.Description, dto.LocationId);
+
+            var domain = new Company(0, dto.Name.Trim(), dto.Address, dto.Description);
 
             return await repo.AddAsync(domain);
 
@@ -32,12 +33,9 @@ public class CompanyService(ICompanyRepository repo) : ICompanyService
             return await repo.DeleteByIdAsync(id);
       }
 
-      public async Task<PaginationDto<CompanyDto>> GetPaginationCompaniesByLocationIdAsync(int LocationId, int Page, int PageSize)
+      public async Task<PaginationDto<CompanyDto>> GetPaginationCompaniesByLocationIdAsync(int Page, int PageSize)
       {
-            if (!await repo.IsAnyLocationWithIdAsync(LocationId))
-                  throw new NotFoundException(ResponseMessage.LocationInvalid);
-
-            return await repo.GetPaginationCompaniesByLocationIdAsync(LocationId, Page, PageSize);
+            return await repo.GetPaginationCompaniesByLocationIdAsync(Page, PageSize);
       }
 
       public async Task<CompanyDto> UpdateAsync(CompanyDto dto)
@@ -48,10 +46,7 @@ public class CompanyService(ICompanyRepository repo) : ICompanyService
             if (string.IsNullOrWhiteSpace(dto.Name))
                   throw new BadRequestException(ResponseMessage.NameEmpty);
 
-            if (!await repo.IsAnyLocationWithIdAsync(dto.LocationId))
-                  throw new BadRequestException(ResponseMessage.LocationInvalid);
-
-            var domain = new Company(dto.Id, dto.Name, dto.Address, dto.Description, dto.LocationId);
+            var domain = new Company(dto.Id, dto.Name, dto.Address, dto.Description);
 
             return await repo.UpdateAsync(domain);
       }

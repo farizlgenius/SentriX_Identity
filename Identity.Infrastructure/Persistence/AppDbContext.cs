@@ -13,11 +13,11 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
   public DbSet<Position> Positions { get; set; }
   public DbSet<Role> Roles { get; set; }
   public DbSet<Permission> Permissions { get; set; }
-  public DbSet<User> Users { get; set; }
+  public DbSet<Operator> Operators { get; set; }
   public DbSet<ApiKey> ApiKeys { get; set; }
   public DbSet<Feature> Features { get; set; }
   public DbSet<RefreshTokenAudit> RefreshTokenAudits { get; set; }
-  public DbSet<UserLocation> UserLocations { get; set; }
+  public DbSet<OperatorLocation> OperatorLocations { get; set; }
   public DbSet<Country> Countries { get; set; }
 
   protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -38,7 +38,7 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
       }
     }
 
-    modelBuilder.Entity<User>()
+    modelBuilder.Entity<Operator>()
         .Property(e => e.gender)
         .HasConversion<string>();
 
@@ -46,17 +46,12 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
         .Property(e => e.action)
         .HasConversion<string>();
 
-    modelBuilder.Entity<User>()
+    modelBuilder.Entity<Operator>()
         .Property(e => e.title)
         .HasConversion<string>();
 
     // Configure entity relationships and constraints here if needed
 
-    modelBuilder.Entity<Location>()
-      .HasMany(l => l.companies)
-      .WithOne(c => c.location)
-      .HasForeignKey(c => c.location_id)
-      .OnDelete(DeleteBehavior.Cascade);
 
     modelBuilder.Entity<Location>()
     .HasMany(l => l.roles)
@@ -87,27 +82,6 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
     ///// Configure the relationships for User entity
     /// 
 
-    modelBuilder.Entity<Company>()
-      .HasMany(d => d.users)
-      .WithOne(u => u.company)
-      .HasForeignKey(u => u.company_id)
-      .OnDelete(DeleteBehavior.Cascade)
-      .IsRequired(false);
-
-    modelBuilder.Entity<Position>()
-      .HasMany(p => p.users)
-      .WithOne(r => r.position)
-      .HasForeignKey(r => r.position_id)
-      .OnDelete(DeleteBehavior.Cascade)
-      .IsRequired(false);
-
-    modelBuilder.Entity<Department>()
-      .HasMany(d => d.users)
-      .WithOne(u => u.department)
-      .HasForeignKey(u => u.department_id)
-      .OnDelete(DeleteBehavior.Cascade)
-      .IsRequired(false);
-
     modelBuilder.Entity<Role>()
       .HasMany(r => r.users)
       .WithOne(u => u.role)
@@ -126,13 +100,13 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
      .HasForeignKey(p => p.feature_id)
      .OnDelete(DeleteBehavior.Cascade);
 
-    modelBuilder.Entity<UserLocation>()
-    .HasKey(x => new { x.location_id, x.user_id });
+    modelBuilder.Entity<OperatorLocation>()
+    .HasKey(x => new { x.location_id, x.operator_id });
 
-    modelBuilder.Entity<User>()
-    .HasMany(u => u.user_locations)
-    .WithOne(u => u.user)
-    .HasForeignKey(u => u.user_id)
+    modelBuilder.Entity<Operator>()
+    .HasMany(u => u.operator_locations)
+    .WithOne(u => u.@operator)
+    .HasForeignKey(u => u.operator_id)
     .OnDelete(DeleteBehavior.Cascade);
 
     modelBuilder.Entity<Location>()
@@ -347,12 +321,12 @@ new Country { id = 177, name = "Zimbabwe", code = "ZW" }
       new Permission { id = 4, role_id = 1, feature_id = 4, is_enabled = true, is_created = true, is_deleted = true, is_updated = true }
     );
 
-    modelBuilder.Entity<User>()
+    modelBuilder.Entity<Operator>()
     .HasData(
-      new User
+      new Operator
       {
         id = 1,
-        user_id = "ADMIN001",
+        operator_id = "ADMIN001",
         username = "admin",
         password = "100000.lG1/4V/VRPZsbhf/Zqc4xw==.6vYcf+wEMSgqcaNhoZEdM9PaPxx2ZUErZhQbeMxo5OY=",
         title = Title.Mr,
@@ -366,9 +340,9 @@ new Country { id = 177, name = "Zimbabwe", code = "ZW" }
       }
     );
 
-    modelBuilder.Entity<UserLocation>()
+    modelBuilder.Entity<OperatorLocation>()
     .HasData(
-      new UserLocation { user_id = 1, location_id = 1 }
+      new OperatorLocation { operator_id = 1, location_id = 1 }
     );
 
   }

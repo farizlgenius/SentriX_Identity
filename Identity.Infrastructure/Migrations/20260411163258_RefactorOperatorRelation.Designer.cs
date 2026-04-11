@@ -3,6 +3,7 @@ using System;
 using Identity.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Identity.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260411163258_RefactorOperatorRelation")]
+    partial class RefactorOperatorRelation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1888,19 +1891,16 @@ namespace Identity.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
 
-                    b.Property<int?>("Companyid")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("Departmentid")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("Positionid")
+                    b.Property<int?>("company_id")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("created_at")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("NOW()");
+
+                    b.Property<int?>("department_id")
+                        .HasColumnType("integer");
 
                     b.Property<string>("email")
                         .IsRequired()
@@ -1937,6 +1937,9 @@ namespace Identity.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int?>("position_id")
+                        .HasColumnType("integer");
+
                     b.Property<int>("role_id")
                         .HasColumnType("integer");
 
@@ -1955,11 +1958,11 @@ namespace Identity.Infrastructure.Migrations
 
                     b.HasKey("id");
 
-                    b.HasIndex("Companyid");
+                    b.HasIndex("company_id");
 
-                    b.HasIndex("Departmentid");
+                    b.HasIndex("department_id");
 
-                    b.HasIndex("Positionid");
+                    b.HasIndex("position_id");
 
                     b.HasIndex("role_id");
 
@@ -2263,23 +2266,32 @@ namespace Identity.Infrastructure.Migrations
 
             modelBuilder.Entity("Identity.Infrastructure.Persistence.Entities.Operator", b =>
                 {
-                    b.HasOne("Identity.Infrastructure.Persistence.Entities.Company", null)
+                    b.HasOne("Identity.Infrastructure.Persistence.Entities.Company", "company")
                         .WithMany("operators")
-                        .HasForeignKey("Companyid");
+                        .HasForeignKey("company_id")
+                        .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Identity.Infrastructure.Persistence.Entities.Department", null)
+                    b.HasOne("Identity.Infrastructure.Persistence.Entities.Department", "department")
                         .WithMany("operators")
-                        .HasForeignKey("Departmentid");
+                        .HasForeignKey("department_id")
+                        .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Identity.Infrastructure.Persistence.Entities.Position", null)
+                    b.HasOne("Identity.Infrastructure.Persistence.Entities.Position", "position")
                         .WithMany("operators")
-                        .HasForeignKey("Positionid");
+                        .HasForeignKey("position_id")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Identity.Infrastructure.Persistence.Entities.Role", "role")
                         .WithMany("users")
                         .HasForeignKey("role_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("company");
+
+                    b.Navigation("department");
+
+                    b.Navigation("position");
 
                     b.Navigation("role");
                 });

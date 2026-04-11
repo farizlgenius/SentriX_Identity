@@ -9,6 +9,7 @@ using System.IdentityModel.Tokens.Jwt;
 using Identity.Domain.Entities;
 using Identity.Application.Helpers;
 using Identity.Domain.Enums;
+using Identity.Application.DTOs;
 
 namespace Identity.Application.Services;
 
@@ -19,7 +20,7 @@ public sealed class JwtService(IJwtData settings, IRefreshTokenAuditRepository r
   private readonly string _audience = settings.Audience;
   private readonly short _accessTokenMinutes = settings.AccessTokenMinutes;
   private readonly short _refreshTokenDays = settings.RefreshTokenDays;
-  public async Task<Token> GenerateTokenAsync(User user)
+  public async Task<Token> GenerateTokenAsync(UserInTokenDto user)
   {
     var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey));
     var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -35,7 +36,8 @@ public sealed class JwtService(IJwtData settings, IRefreshTokenAuditRepository r
       // Authorized
       new Claim("role",user.RoleName),
       new Claim("role_id",user.RoleId.ToString()),
-      new Claim("tenant",user.LocationId.ToString())
+      new Claim("tenant_id",user.LocationId.ToString()),
+      new Claim("tenant",user.LocationName)
 
     };
 

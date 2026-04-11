@@ -3,6 +3,7 @@ using System;
 using Identity.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Identity.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260411082423_RefactorUserTable")]
+    partial class RefactorUserTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -80,8 +83,8 @@ namespace Identity.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<bool>("is_active")
-                        .HasColumnType("boolean");
+                    b.Property<int>("location_id")
+                        .HasColumnType("integer");
 
                     b.Property<string>("name")
                         .IsRequired()
@@ -93,6 +96,8 @@ namespace Identity.Infrastructure.Migrations
                         .HasDefaultValueSql("NOW()");
 
                     b.HasKey("id");
+
+                    b.HasIndex("location_id");
 
                     b.ToTable("Companies");
                 });
@@ -114,9 +119,6 @@ namespace Identity.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("NOW()");
 
-                    b.Property<bool>("is_active")
-                        .HasColumnType("boolean");
-
                     b.Property<string>("name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -136,7 +138,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 1,
                             code = "AD",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Andorra",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -145,7 +146,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 2,
                             code = "AE",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "United Arab Emirates",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -154,7 +154,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 3,
                             code = "AF",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Afghanistan",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -163,7 +162,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 4,
                             code = "AG",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Antigua and Barbuda",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -172,7 +170,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 5,
                             code = "AI",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Anguilla",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -181,7 +178,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 6,
                             code = "AL",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Albania",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -190,7 +186,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 7,
                             code = "AM",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Armenia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -199,7 +194,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 8,
                             code = "AN",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Netherlands Antilles",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -208,7 +202,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 9,
                             code = "AO",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Angola",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -217,7 +210,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 10,
                             code = "AQ",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Antarctica",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -226,7 +218,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 11,
                             code = "AR",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Argentina",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -235,7 +226,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 12,
                             code = "AS",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "American Samoa",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -244,7 +234,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 13,
                             code = "AT",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Austria",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -253,7 +242,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 14,
                             code = "AU",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Australia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -262,7 +250,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 15,
                             code = "AW",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Aruba",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -271,7 +258,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 16,
                             code = "AZ",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Azerbaijan",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -280,7 +266,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 17,
                             code = "BA",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Bosnia and Herzegovina",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -289,7 +274,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 18,
                             code = "BB",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Barbados",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -298,7 +282,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 19,
                             code = "BD",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Bangladesh",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -307,7 +290,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 20,
                             code = "BE",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Belgium",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -316,7 +298,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 21,
                             code = "BF",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Burkina Faso",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -325,7 +306,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 22,
                             code = "BG",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Bulgaria",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -334,7 +314,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 23,
                             code = "BH",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Bahrain",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -343,7 +322,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 24,
                             code = "BI",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Burundi",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -352,7 +330,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 25,
                             code = "BJ",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Benin",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -361,7 +338,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 26,
                             code = "BM",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Bermuda",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -370,7 +346,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 27,
                             code = "BN",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Brunei",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -379,7 +354,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 28,
                             code = "BO",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Bolivia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -388,7 +362,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 29,
                             code = "BR",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Brazil",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -397,7 +370,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 30,
                             code = "BS",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Bahamas",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -406,7 +378,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 31,
                             code = "BT",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Bhutan",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -415,7 +386,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 32,
                             code = "BV",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Bouvet Island",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -424,7 +394,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 33,
                             code = "BW",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Botswana",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -433,7 +402,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 34,
                             code = "BY",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Belarus",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -442,7 +410,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 35,
                             code = "BZ",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Belize",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -451,7 +418,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 36,
                             code = "CA",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Canada",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -460,7 +426,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 37,
                             code = "CC",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Cocos (Keeling) Islands",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -469,7 +434,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 38,
                             code = "CD",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Congo (DRC)",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -478,7 +442,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 39,
                             code = "CF",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Central African Republic",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -487,7 +450,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 40,
                             code = "CG",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Congo (Republic)",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -496,7 +458,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 41,
                             code = "CH",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Switzerland",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -505,7 +466,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 42,
                             code = "CI",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Côte d'Ivoire",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -514,7 +474,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 43,
                             code = "CK",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Cook Islands",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -523,7 +482,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 44,
                             code = "CL",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Chile",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -532,7 +490,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 45,
                             code = "CM",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Cameroon",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -541,7 +498,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 46,
                             code = "CN",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "China",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -550,7 +506,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 47,
                             code = "CO",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Colombia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -559,7 +514,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 48,
                             code = "CR",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Costa Rica",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -568,7 +522,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 49,
                             code = "CU",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Cuba",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -577,7 +530,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 50,
                             code = "CV",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Cape Verde",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -586,7 +538,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 51,
                             code = "CX",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Christmas Island",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -595,7 +546,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 52,
                             code = "CY",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Cyprus",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -604,7 +554,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 53,
                             code = "CZ",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Czech Republic",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -613,7 +562,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 54,
                             code = "DE",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Germany",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -622,7 +570,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 55,
                             code = "DJ",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Djibouti",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -631,7 +578,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 56,
                             code = "DK",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Denmark",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -640,7 +586,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 57,
                             code = "DM",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Dominica",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -649,7 +594,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 58,
                             code = "DO",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Dominican Republic",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -658,7 +602,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 59,
                             code = "DZ",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Algeria",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -667,7 +610,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 60,
                             code = "EC",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Ecuador",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -676,7 +618,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 61,
                             code = "EE",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Estonia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -685,7 +626,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 62,
                             code = "EG",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Egypt",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -694,7 +634,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 63,
                             code = "EH",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Western Sahara",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -703,7 +642,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 64,
                             code = "ER",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Eritrea",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -712,7 +650,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 65,
                             code = "ES",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Spain",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -721,7 +658,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 66,
                             code = "ET",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Ethiopia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -730,7 +666,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 67,
                             code = "FI",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Finland",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -739,7 +674,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 68,
                             code = "FJ",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Fiji",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -748,7 +682,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 69,
                             code = "FK",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Falkland Islands",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -757,7 +690,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 70,
                             code = "FM",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Micronesia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -766,7 +698,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 71,
                             code = "FO",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Faroe Islands",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -775,7 +706,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 72,
                             code = "FR",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "France",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -784,7 +714,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 73,
                             code = "GA",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Gabon",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -793,7 +722,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 74,
                             code = "GB",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "United Kingdom",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -802,7 +730,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 75,
                             code = "GD",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Grenada",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -811,7 +738,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 76,
                             code = "GE",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Georgia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -820,7 +746,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 77,
                             code = "GF",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "French Guiana",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -829,7 +754,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 78,
                             code = "GG",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Guernsey",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -838,7 +762,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 79,
                             code = "GH",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Ghana",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -847,7 +770,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 80,
                             code = "GI",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Gibraltar",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -856,7 +778,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 81,
                             code = "GL",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Greenland",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -865,7 +786,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 82,
                             code = "GM",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Gambia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -874,7 +794,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 83,
                             code = "GN",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Guinea",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -883,7 +802,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 84,
                             code = "GP",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Guadeloupe",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -892,7 +810,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 85,
                             code = "GQ",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Equatorial Guinea",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -901,7 +818,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 86,
                             code = "GR",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Greece",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -910,7 +826,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 87,
                             code = "GT",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Guatemala",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -919,7 +834,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 88,
                             code = "GU",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Guam",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -928,7 +842,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 89,
                             code = "GW",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Guinea-Bissau",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -937,7 +850,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 90,
                             code = "GY",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Guyana",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -946,7 +858,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 91,
                             code = "HK",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Hong Kong",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -955,7 +866,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 92,
                             code = "HN",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Honduras",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -964,7 +874,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 93,
                             code = "HR",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Croatia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -973,7 +882,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 94,
                             code = "HT",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Haiti",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -982,7 +890,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 95,
                             code = "HU",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Hungary",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -991,7 +898,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 96,
                             code = "ID",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Indonesia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1000,7 +906,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 97,
                             code = "IE",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Ireland",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1009,7 +914,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 98,
                             code = "IL",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Israel",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1018,7 +922,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 99,
                             code = "IN",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "India",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1027,7 +930,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 100,
                             code = "IQ",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Iraq",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1036,7 +938,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 101,
                             code = "IR",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Iran",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1045,7 +946,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 102,
                             code = "IS",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Iceland",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1054,7 +954,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 103,
                             code = "IT",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Italy",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1063,7 +962,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 104,
                             code = "JM",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Jamaica",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1072,7 +970,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 105,
                             code = "JO",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Jordan",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1081,7 +978,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 106,
                             code = "JP",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Japan",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1090,7 +986,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 107,
                             code = "KE",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Kenya",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1099,7 +994,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 108,
                             code = "KH",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Cambodia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1108,7 +1002,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 109,
                             code = "KR",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "South Korea",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1117,7 +1010,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 110,
                             code = "KW",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Kuwait",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1126,7 +1018,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 111,
                             code = "KZ",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Kazakhstan",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1135,7 +1026,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 112,
                             code = "LA",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Laos",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1144,7 +1034,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 113,
                             code = "LB",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Lebanon",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1153,7 +1042,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 114,
                             code = "LK",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Sri Lanka",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1162,7 +1050,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 115,
                             code = "LR",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Liberia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1171,7 +1058,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 116,
                             code = "LS",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Lesotho",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1180,7 +1066,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 117,
                             code = "LT",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Lithuania",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1189,7 +1074,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 118,
                             code = "LU",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Luxembourg",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1198,7 +1082,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 119,
                             code = "LV",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Latvia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1207,7 +1090,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 120,
                             code = "LY",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Libya",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1216,7 +1098,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 121,
                             code = "MA",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Morocco",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1225,7 +1106,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 122,
                             code = "MC",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Monaco",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1234,7 +1114,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 123,
                             code = "MD",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Moldova",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1243,7 +1122,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 124,
                             code = "ME",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Montenegro",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1252,7 +1130,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 125,
                             code = "MG",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Madagascar",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1261,7 +1138,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 126,
                             code = "MV",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Maldives",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1270,7 +1146,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 127,
                             code = "MX",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Mexico",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1279,7 +1154,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 128,
                             code = "MY",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Malaysia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1288,7 +1162,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 129,
                             code = "MZ",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Mozambique",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1297,7 +1170,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 130,
                             code = "NA",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Namibia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1306,7 +1178,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 131,
                             code = "NG",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Nigeria",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1315,7 +1186,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 132,
                             code = "NL",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Netherlands",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1324,7 +1194,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 133,
                             code = "NO",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Norway",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1333,7 +1202,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 134,
                             code = "NP",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Nepal",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1342,7 +1210,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 135,
                             code = "NZ",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "New Zealand",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1351,7 +1218,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 136,
                             code = "OM",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Oman",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1360,7 +1226,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 137,
                             code = "PA",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Panama",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1369,7 +1234,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 138,
                             code = "PE",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Peru",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1378,7 +1242,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 139,
                             code = "PH",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Philippines",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1387,7 +1250,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 140,
                             code = "PK",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Pakistan",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1396,7 +1258,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 141,
                             code = "PL",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Poland",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1405,7 +1266,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 142,
                             code = "PT",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Portugal",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1414,7 +1274,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 143,
                             code = "QA",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Qatar",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1423,7 +1282,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 144,
                             code = "RO",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Romania",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1432,7 +1290,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 145,
                             code = "RS",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Serbia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1441,7 +1298,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 146,
                             code = "RU",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Russia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1450,7 +1306,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 147,
                             code = "RW",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Rwanda",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1459,7 +1314,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 148,
                             code = "SA",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Saudi Arabia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1468,7 +1322,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 149,
                             code = "SE",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Sweden",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1477,7 +1330,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 150,
                             code = "SG",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Singapore",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1486,7 +1338,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 151,
                             code = "SI",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Slovenia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1495,7 +1346,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 152,
                             code = "SK",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Slovakia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1504,7 +1354,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 153,
                             code = "SN",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Senegal",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1513,7 +1362,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 154,
                             code = "SO",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Somalia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1522,7 +1370,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 155,
                             code = "SR",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Suriname",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1531,7 +1378,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 156,
                             code = "SV",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "El Salvador",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1540,7 +1386,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 157,
                             code = "SY",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Syria",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1549,7 +1394,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 158,
                             code = "TH",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Thailand",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1558,7 +1402,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 159,
                             code = "TJ",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Tajikistan",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1567,7 +1410,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 160,
                             code = "TL",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Timor-Leste",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1576,7 +1418,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 161,
                             code = "TM",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Turkmenistan",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1585,7 +1426,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 162,
                             code = "TN",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Tunisia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1594,7 +1434,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 163,
                             code = "TR",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Turkey",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1603,7 +1442,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 164,
                             code = "TW",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Taiwan",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1612,7 +1450,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 165,
                             code = "TZ",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Tanzania",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1621,7 +1458,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 166,
                             code = "UA",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Ukraine",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1630,7 +1466,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 167,
                             code = "UG",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Uganda",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1639,7 +1474,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 168,
                             code = "US",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "United States",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1648,7 +1482,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 169,
                             code = "UY",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Uruguay",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1657,7 +1490,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 170,
                             code = "UZ",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Uzbekistan",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1666,7 +1498,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 171,
                             code = "VA",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Vatican City",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1675,7 +1506,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 172,
                             code = "VE",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Venezuela",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1684,7 +1514,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 173,
                             code = "VN",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Vietnam",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1693,7 +1522,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 174,
                             code = "YE",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Yemen",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1702,7 +1530,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 175,
                             code = "ZA",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "South Africa",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1711,7 +1538,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 176,
                             code = "ZM",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Zambia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1720,7 +1546,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 177,
                             code = "ZW",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "Zimbabwe",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
@@ -1745,9 +1570,6 @@ namespace Identity.Infrastructure.Migrations
                     b.Property<string>("description")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<bool>("is_active")
-                        .HasColumnType("boolean");
 
                     b.Property<string>("name")
                         .IsRequired()
@@ -1778,9 +1600,6 @@ namespace Identity.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("NOW()");
 
-                    b.Property<bool>("is_active")
-                        .HasColumnType("boolean");
-
                     b.Property<string>("name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -1799,7 +1618,6 @@ namespace Identity.Infrastructure.Migrations
                         {
                             id = 1,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "dashboard",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1807,7 +1625,6 @@ namespace Identity.Infrastructure.Migrations
                         {
                             id = 2,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "events",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1815,7 +1632,6 @@ namespace Identity.Infrastructure.Migrations
                         {
                             id = 3,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "reports",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1823,7 +1639,6 @@ namespace Identity.Infrastructure.Migrations
                         {
                             id = 4,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             name = "settings",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
@@ -1849,9 +1664,6 @@ namespace Identity.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<bool>("is_active")
-                        .HasColumnType("boolean");
-
                     b.Property<string>("name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -1874,137 +1686,8 @@ namespace Identity.Infrastructure.Migrations
                             country_id = 158,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Default Location",
-                            is_active = true,
                             name = "Main",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        });
-                });
-
-            modelBuilder.Entity("Identity.Infrastructure.Persistence.Entities.Operator", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
-
-                    b.Property<int?>("Companyid")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("Departmentid")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("Positionid")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("created_at")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("NOW()");
-
-                    b.Property<string>("email")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("firstname")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("gender")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<bool>("is_active")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("lastname")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("middlename")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("mobile")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("operator_id")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("password")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("role_id")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("title")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("updated_at")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("NOW()");
-
-                    b.Property<string>("username")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("id");
-
-                    b.HasIndex("Companyid");
-
-                    b.HasIndex("Departmentid");
-
-                    b.HasIndex("Positionid");
-
-                    b.HasIndex("role_id");
-
-                    b.ToTable("Operators");
-
-                    b.HasData(
-                        new
-                        {
-                            id = 1,
-                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            email = "admin@sentrix.com",
-                            firstname = "Administrator",
-                            gender = "Male",
-                            is_active = true,
-                            lastname = "SentriX",
-                            middlename = "",
-                            mobile = "",
-                            operator_id = "ADMIN001",
-                            password = "100000.lG1/4V/VRPZsbhf/Zqc4xw==.6vYcf+wEMSgqcaNhoZEdM9PaPxx2ZUErZhQbeMxo5OY=",
-                            role_id = 1,
-                            title = "Mr",
-                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            username = "admin"
-                        });
-                });
-
-            modelBuilder.Entity("Identity.Infrastructure.Persistence.Entities.OperatorLocation", b =>
-                {
-                    b.Property<int>("location_id")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("operator_id")
-                        .HasColumnType("integer");
-
-                    b.HasKey("location_id", "operator_id");
-
-                    b.HasIndex("operator_id");
-
-                    b.ToTable("OperatorLocations");
-
-                    b.HasData(
-                        new
-                        {
-                            location_id = 1,
-                            operator_id = 1
                         });
                 });
 
@@ -2023,9 +1706,6 @@ namespace Identity.Infrastructure.Migrations
 
                     b.Property<int>("feature_id")
                         .HasColumnType("integer");
-
-                    b.Property<bool>("is_active")
-                        .HasColumnType("boolean");
 
                     b.Property<bool>("is_created")
                         .HasColumnType("boolean");
@@ -2061,7 +1741,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 1,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             feature_id = 1,
-                            is_active = true,
                             is_created = true,
                             is_deleted = true,
                             is_enabled = true,
@@ -2074,7 +1753,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 2,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             feature_id = 2,
-                            is_active = true,
                             is_created = true,
                             is_deleted = true,
                             is_enabled = true,
@@ -2087,7 +1765,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 3,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             feature_id = 3,
-                            is_active = true,
                             is_created = true,
                             is_deleted = true,
                             is_enabled = true,
@@ -2100,7 +1777,6 @@ namespace Identity.Infrastructure.Migrations
                             id = 4,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             feature_id = 4,
-                            is_active = true,
                             is_created = true,
                             is_deleted = true,
                             is_enabled = true,
@@ -2129,9 +1805,6 @@ namespace Identity.Infrastructure.Migrations
                     b.Property<string>("description")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<bool>("is_active")
-                        .HasColumnType("boolean");
 
                     b.Property<string>("name")
                         .IsRequired()
@@ -2173,9 +1846,6 @@ namespace Identity.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<bool>("is_active")
-                        .HasColumnType("boolean");
-
                     b.Property<DateTime>("updated_at")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
@@ -2207,9 +1877,6 @@ namespace Identity.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("NOW()");
 
-                    b.Property<bool>("is_active")
-                        .HasColumnType("boolean");
-
                     b.Property<int>("location_id")
                         .HasColumnType("integer");
 
@@ -2233,11 +1900,145 @@ namespace Identity.Infrastructure.Migrations
                         {
                             id = 1,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
                             location_id = 1,
                             name = "Administrator",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
+                });
+
+            modelBuilder.Entity("Identity.Infrastructure.Persistence.Entities.User", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<int?>("company_id")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
+
+                    b.Property<int?>("department_id")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("email")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("firstname")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("gender")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("lastname")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("middlename")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("mobile")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("password")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int?>("position_id")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("role_id")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("title")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("updated_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
+
+                    b.Property<string>("user_id")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("username")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("company_id");
+
+                    b.HasIndex("department_id");
+
+                    b.HasIndex("position_id");
+
+                    b.HasIndex("role_id");
+
+                    b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            email = "admin@sentrix.com",
+                            firstname = "Administrator",
+                            gender = "Male",
+                            lastname = "SentriX",
+                            middlename = "",
+                            mobile = "",
+                            password = "100000.lG1/4V/VRPZsbhf/Zqc4xw==.6vYcf+wEMSgqcaNhoZEdM9PaPxx2ZUErZhQbeMxo5OY=",
+                            role_id = 1,
+                            title = "Mr",
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            user_id = "ADMIN001",
+                            username = "admin"
+                        });
+                });
+
+            modelBuilder.Entity("Identity.Infrastructure.Persistence.Entities.UserLocation", b =>
+                {
+                    b.Property<int>("location_id")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("user_id")
+                        .HasColumnType("integer");
+
+                    b.HasKey("location_id", "user_id");
+
+                    b.HasIndex("user_id");
+
+                    b.ToTable("UserLocations");
+
+                    b.HasData(
+                        new
+                        {
+                            location_id = 1,
+                            user_id = 1
+                        });
+                });
+
+            modelBuilder.Entity("Identity.Infrastructure.Persistence.Entities.Company", b =>
+                {
+                    b.HasOne("Identity.Infrastructure.Persistence.Entities.Location", "location")
+                        .WithMany("companies")
+                        .HasForeignKey("location_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("location");
                 });
 
             modelBuilder.Entity("Identity.Infrastructure.Persistence.Entities.Department", b =>
@@ -2259,48 +2060,6 @@ namespace Identity.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("country");
-                });
-
-            modelBuilder.Entity("Identity.Infrastructure.Persistence.Entities.Operator", b =>
-                {
-                    b.HasOne("Identity.Infrastructure.Persistence.Entities.Company", null)
-                        .WithMany("operators")
-                        .HasForeignKey("Companyid");
-
-                    b.HasOne("Identity.Infrastructure.Persistence.Entities.Department", null)
-                        .WithMany("operators")
-                        .HasForeignKey("Departmentid");
-
-                    b.HasOne("Identity.Infrastructure.Persistence.Entities.Position", null)
-                        .WithMany("operators")
-                        .HasForeignKey("Positionid");
-
-                    b.HasOne("Identity.Infrastructure.Persistence.Entities.Role", "role")
-                        .WithMany("users")
-                        .HasForeignKey("role_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("role");
-                });
-
-            modelBuilder.Entity("Identity.Infrastructure.Persistence.Entities.OperatorLocation", b =>
-                {
-                    b.HasOne("Identity.Infrastructure.Persistence.Entities.Location", "location")
-                        .WithMany("user_locations")
-                        .HasForeignKey("location_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Identity.Infrastructure.Persistence.Entities.Operator", "operator")
-                        .WithMany("operator_locations")
-                        .HasForeignKey("operator_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("location");
-
-                    b.Navigation("operator");
                 });
 
             modelBuilder.Entity("Identity.Infrastructure.Persistence.Entities.Permission", b =>
@@ -2343,11 +2102,62 @@ namespace Identity.Infrastructure.Migrations
                     b.Navigation("location");
                 });
 
+            modelBuilder.Entity("Identity.Infrastructure.Persistence.Entities.User", b =>
+                {
+                    b.HasOne("Identity.Infrastructure.Persistence.Entities.Company", "company")
+                        .WithMany("users")
+                        .HasForeignKey("company_id")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Identity.Infrastructure.Persistence.Entities.Department", "department")
+                        .WithMany("users")
+                        .HasForeignKey("department_id")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Identity.Infrastructure.Persistence.Entities.Position", "position")
+                        .WithMany("users")
+                        .HasForeignKey("position_id")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Identity.Infrastructure.Persistence.Entities.Role", "role")
+                        .WithMany("users")
+                        .HasForeignKey("role_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("company");
+
+                    b.Navigation("department");
+
+                    b.Navigation("position");
+
+                    b.Navigation("role");
+                });
+
+            modelBuilder.Entity("Identity.Infrastructure.Persistence.Entities.UserLocation", b =>
+                {
+                    b.HasOne("Identity.Infrastructure.Persistence.Entities.Location", "location")
+                        .WithMany("user_locations")
+                        .HasForeignKey("location_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Identity.Infrastructure.Persistence.Entities.User", "user")
+                        .WithMany("user_locations")
+                        .HasForeignKey("user_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("location");
+
+                    b.Navigation("user");
+                });
+
             modelBuilder.Entity("Identity.Infrastructure.Persistence.Entities.Company", b =>
                 {
                     b.Navigation("departments");
 
-                    b.Navigation("operators");
+                    b.Navigation("users");
                 });
 
             modelBuilder.Entity("Identity.Infrastructure.Persistence.Entities.Country", b =>
@@ -2357,9 +2167,9 @@ namespace Identity.Infrastructure.Migrations
 
             modelBuilder.Entity("Identity.Infrastructure.Persistence.Entities.Department", b =>
                 {
-                    b.Navigation("operators");
-
                     b.Navigation("positions");
+
+                    b.Navigation("users");
                 });
 
             modelBuilder.Entity("Identity.Infrastructure.Persistence.Entities.Feature", b =>
@@ -2369,19 +2179,16 @@ namespace Identity.Infrastructure.Migrations
 
             modelBuilder.Entity("Identity.Infrastructure.Persistence.Entities.Location", b =>
                 {
+                    b.Navigation("companies");
+
                     b.Navigation("roles");
 
                     b.Navigation("user_locations");
                 });
 
-            modelBuilder.Entity("Identity.Infrastructure.Persistence.Entities.Operator", b =>
-                {
-                    b.Navigation("operator_locations");
-                });
-
             modelBuilder.Entity("Identity.Infrastructure.Persistence.Entities.Position", b =>
                 {
-                    b.Navigation("operators");
+                    b.Navigation("users");
                 });
 
             modelBuilder.Entity("Identity.Infrastructure.Persistence.Entities.Role", b =>
@@ -2389,6 +2196,11 @@ namespace Identity.Infrastructure.Migrations
                     b.Navigation("permissions");
 
                     b.Navigation("users");
+                });
+
+            modelBuilder.Entity("Identity.Infrastructure.Persistence.Entities.User", b =>
+                {
+                    b.Navigation("user_locations");
                 });
 #pragma warning restore 612, 618
         }

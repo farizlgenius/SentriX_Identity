@@ -1,21 +1,19 @@
 using System;
 using System.Net;
+using Identity.Domain.Enums;
 
 namespace Identity.Application.DTOs;
 
-public sealed record UserDto(
-  HttpStatusCode Code,
-  string Message,
-  DateTime Timestamp,
+public sealed record OperatorDto(
+  int Id,
   string UserId,
   string Username,
+  Title Title,
   string FirstName,
   string MiddleName,
   string LastName,
+  Gender Gender,
   string Email,
-  string Mobile
-) : BaseDto(
-  Code,
-  Message,
-  Timestamp
+  string Mobile,
+  string Role
 );

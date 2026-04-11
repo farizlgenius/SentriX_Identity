@@ -20,13 +20,16 @@ public sealed class CompanyRepository(AppDbContext context) : ICompanyRepository
             if (data is null || save <= 0)
                   throw new Exception(DbExceptionMessage.SaveRecordUnsuccessful);
 
+            save = await context.SaveChangesAsync();
+
+            if (save < 0)
+                  throw new Exception(DbExceptionMessage.SaveRecordUnsuccessful);
+
             return new CompanyDto(
                   data.Entity.id,
               data.Entity.name,
               data.Entity.description,
-              data.Entity.address,
-              data.Entity.location_id,
-            await context.Locations.AsNoTracking().OrderByDescending(c => c.id).Where(c => c.id == data.Entity.location_id).Select(c => c.name).FirstOrDefaultAsync() ?? "");
+              data.Entity.address);
       }
 
       public async Task<CompanyDto> DeleteByIdAsync(int id)
@@ -38,18 +41,16 @@ public sealed class CompanyRepository(AppDbContext context) : ICompanyRepository
             var save = await context.SaveChangesAsync();
 
             return new CompanyDto(
-                  data.Entity.id,
-              data.Entity.name,
-              data.Entity.description,
-              data.Entity.address,
-              data.Entity.location_id,
-            await context.Locations.AsNoTracking().OrderByDescending(c => c.id).Where(c => c.id == data.Entity.location_id).Select(c => c.name).FirstOrDefaultAsync() ?? "");
+                 data.Entity.id,
+             data.Entity.name,
+             data.Entity.description,
+             data.Entity.address);
 
       }
 
 
 
-      public async Task<PaginationDto<CompanyDto>> GetPaginationCompaniesByLocationIdAsync(int LocationId, int Page, int PageSize)
+      public async Task<PaginationDto<CompanyDto>> GetPaginationCompaniesByLocationIdAsync(int Page, int PageSize)
       {
             var query = context.Companies.AsNoTracking().AsQueryable();
             var totalItems = await query.CountAsync();
@@ -57,20 +58,21 @@ public sealed class CompanyRepository(AppDbContext context) : ICompanyRepository
                   .OrderByDescending(x => x.id)
                   .Skip((Page - 1) * PageSize)
                   .Take(PageSize)
-                  .Select(x => new CompanyDto(x.id, x.name, x.address, x.description, x.location_id, x.location.name))
+                  .Select(x => new CompanyDto(x.id, x.name, x.description, x.address))
                   .ToListAsync();
 
             return new PaginationDto<CompanyDto>(Page, PageSize, totalItems, (int)Math.Ceiling(totalItems / (double)PageSize), items);
       }
 
-      public async Task<bool> IsAnyLocationWithIdAsync(int LocationId)
-      {
-            return await context.Locations.AsNoTracking().AnyAsync(x => x.id == LocationId);
-      }
 
       public async Task<bool> IsAnyWithIdAsync(int id)
       {
             return await context.Companies.AsNoTracking().AnyAsync(c => c.id == id);
+      }
+
+      public async Task<bool> IsAnyWithNameAsync(string Name)
+      {
+            return await context.Companies.AsNoTracking().AnyAsync(x => x.name.Equals(Name));
       }
 
       public async Task<CompanyDto> UpdateAsync(Company domain)
@@ -83,11 +85,10 @@ public sealed class CompanyRepository(AppDbContext context) : ICompanyRepository
             var save = await context.SaveChangesAsync();
 
             return new CompanyDto(
-                  data.Entity.id,
-              data.Entity.name,
-              data.Entity.description,
-              data.Entity.address,
-              data.Entity.location_id,
-            await context.Locations.AsNoTracking().OrderByDescending(c => c.id).Where(c => c.id == data.Entity.location_id).Select(c => c.name).FirstOrDefaultAsync() ?? "");
+                 data.Entity.id,
+             data.Entity.name,
+             data.Entity.description,
+             data.Entity.address);
+
       }
 }

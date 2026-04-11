@@ -8,8 +8,7 @@ public sealed class Location : BaseEntity
   public string description { get; set; } = string.Empty;
   public int country_id { get; set; }
   public Country country { get; set; } = default!;
-  public ICollection<Company> companies { get; set; } = new List<Company>();
-  public ICollection<UserLocation> user_locations { get; set; } = new List<UserLocation>();
+  public ICollection<OperatorLocation> user_locations { get; set; } = new List<OperatorLocation>();
   public ICollection<Role> roles { get; set; } = new List<Role>();
   public Location() { }
   public Location(Domain.Entities.Location d)

@@ -23,6 +23,7 @@ public class DISettingHelper
     builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
     builder.Services.AddScoped<IPositionRepository, PositionRepository>();
     builder.Services.AddScoped<IRoleRepository, RoleRepository>();
+    builder.Services.AddScoped<IOperatorRepository, OperatorRepository>();
 
     // ==========================
     // Adding Service
@@ -30,12 +31,13 @@ public class DISettingHelper
     builder.Services.AddScoped<IApiKeyService, ApiKeyService>();
     builder.Services.AddScoped<IAuthService, AuthService>();
     builder.Services.AddScoped<IJwtService, JwtService>();
-    builder.Services.AddScoped<IUserService, UserService>();
+    builder.Services.AddScoped<IOperatorService, OperatorService>();
     builder.Services.AddScoped<ILocationService, LocationService>();
     builder.Services.AddScoped<ICompanyService, CompanyService>();
     builder.Services.AddScoped<IDepartmentService, DepartmentService>();
     builder.Services.AddScoped<IPositionService, PositionService>();
     builder.Services.AddScoped<IRoleService, RoleService>();
+    builder.Services.AddScoped<IOperatorService, OperatorService>();
 
     // ==========================
     // Custom Service

@@ -3,6 +3,7 @@ using System;
 using Identity.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Identity.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260411155534_RefactorCompanyRelation")]
+    partial class RefactorCompanyRelation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -95,6 +98,21 @@ namespace Identity.Infrastructure.Migrations
                     b.HasKey("id");
 
                     b.ToTable("Companies");
+                });
+
+            modelBuilder.Entity("Identity.Infrastructure.Persistence.Entities.CompanyLocation", b =>
+                {
+                    b.Property<int>("company_id")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("location_id")
+                        .HasColumnType("integer");
+
+                    b.HasKey("company_id", "location_id");
+
+                    b.HasIndex("location_id");
+
+                    b.ToTable("CompanyLocation");
                 });
 
             modelBuilder.Entity("Identity.Infrastructure.Persistence.Entities.Country", b =>
@@ -1888,19 +1906,16 @@ namespace Identity.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
 
-                    b.Property<int?>("Companyid")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("Departmentid")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("Positionid")
+                    b.Property<int?>("company_id")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("created_at")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("NOW()");
+
+                    b.Property<int?>("department_id")
+                        .HasColumnType("integer");
 
                     b.Property<string>("email")
                         .IsRequired()
@@ -1937,6 +1952,9 @@ namespace Identity.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int?>("position_id")
+                        .HasColumnType("integer");
+
                     b.Property<int>("role_id")
                         .HasColumnType("integer");
 
@@ -1955,11 +1973,11 @@ namespace Identity.Infrastructure.Migrations
 
                     b.HasKey("id");
 
-                    b.HasIndex("Companyid");
+                    b.HasIndex("company_id");
 
-                    b.HasIndex("Departmentid");
+                    b.HasIndex("department_id");
 
-                    b.HasIndex("Positionid");
+                    b.HasIndex("position_id");
 
                     b.HasIndex("role_id");
 
@@ -2240,6 +2258,25 @@ namespace Identity.Infrastructure.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Identity.Infrastructure.Persistence.Entities.CompanyLocation", b =>
+                {
+                    b.HasOne("Identity.Infrastructure.Persistence.Entities.Company", "company")
+                        .WithMany("company_locations")
+                        .HasForeignKey("company_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Identity.Infrastructure.Persistence.Entities.Location", "location")
+                        .WithMany("company_locations")
+                        .HasForeignKey("location_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("company");
+
+                    b.Navigation("location");
+                });
+
             modelBuilder.Entity("Identity.Infrastructure.Persistence.Entities.Department", b =>
                 {
                     b.HasOne("Identity.Infrastructure.Persistence.Entities.Company", "company")
@@ -2263,23 +2300,32 @@ namespace Identity.Infrastructure.Migrations
 
             modelBuilder.Entity("Identity.Infrastructure.Persistence.Entities.Operator", b =>
                 {
-                    b.HasOne("Identity.Infrastructure.Persistence.Entities.Company", null)
-                        .WithMany("operators")
-                        .HasForeignKey("Companyid");
+                    b.HasOne("Identity.Infrastructure.Persistence.Entities.Company", "company")
+                        .WithMany("users")
+                        .HasForeignKey("company_id")
+                        .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Identity.Infrastructure.Persistence.Entities.Department", null)
-                        .WithMany("operators")
-                        .HasForeignKey("Departmentid");
+                    b.HasOne("Identity.Infrastructure.Persistence.Entities.Department", "department")
+                        .WithMany("users")
+                        .HasForeignKey("department_id")
+                        .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Identity.Infrastructure.Persistence.Entities.Position", null)
-                        .WithMany("operators")
-                        .HasForeignKey("Positionid");
+                    b.HasOne("Identity.Infrastructure.Persistence.Entities.Position", "position")
+                        .WithMany("users")
+                        .HasForeignKey("position_id")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Identity.Infrastructure.Persistence.Entities.Role", "role")
                         .WithMany("users")
                         .HasForeignKey("role_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("company");
+
+                    b.Navigation("department");
+
+                    b.Navigation("position");
 
                     b.Navigation("role");
                 });
@@ -2345,9 +2391,11 @@ namespace Identity.Infrastructure.Migrations
 
             modelBuilder.Entity("Identity.Infrastructure.Persistence.Entities.Company", b =>
                 {
+                    b.Navigation("company_locations");
+
                     b.Navigation("departments");
 
-                    b.Navigation("operators");
+                    b.Navigation("users");
                 });
 
             modelBuilder.Entity("Identity.Infrastructure.Persistence.Entities.Country", b =>
@@ -2357,9 +2405,9 @@ namespace Identity.Infrastructure.Migrations
 
             modelBuilder.Entity("Identity.Infrastructure.Persistence.Entities.Department", b =>
                 {
-                    b.Navigation("operators");
-
                     b.Navigation("positions");
+
+                    b.Navigation("users");
                 });
 
             modelBuilder.Entity("Identity.Infrastructure.Persistence.Entities.Feature", b =>
@@ -2369,6 +2417,8 @@ namespace Identity.Infrastructure.Migrations
 
             modelBuilder.Entity("Identity.Infrastructure.Persistence.Entities.Location", b =>
                 {
+                    b.Navigation("company_locations");
+
                     b.Navigation("roles");
 
                     b.Navigation("user_locations");
@@ -2381,7 +2431,7 @@ namespace Identity.Infrastructure.Migrations
 
             modelBuilder.Entity("Identity.Infrastructure.Persistence.Entities.Position", b =>
                 {
-                    b.Navigation("operators");
+                    b.Navigation("users");
                 });
 
             modelBuilder.Entity("Identity.Infrastructure.Persistence.Entities.Role", b =>

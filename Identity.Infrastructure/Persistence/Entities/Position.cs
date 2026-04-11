@@ -8,7 +8,7 @@ public sealed class Position : BaseEntity
   public string description { get; set; } = string.Empty;
   public int department_id { get; set; }
   public Department department { get; set; } = default!;
-  public ICollection<User> users { get; set; } = new List<User>();
+  public ICollection<Operator> operators { get; set; } = new List<Operator>();
   public Position() { }
 
   public Position(string name, string description, int department_id)

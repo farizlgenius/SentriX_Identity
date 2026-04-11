@@ -2,6 +2,7 @@ using System;
 using Identity.Application.DTOs;
 using Identity.Application.Interfaces;
 using Identity.Domain.Entities;
+using Identity.Domain.Enums;
 using Identity.Infrastructure.Persistence;
 using Identity.Infrastructure.Persistence.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -12,12 +13,12 @@ public class AuthRepository(AppDbContext context) : IAuthRepository
 {
   public async Task<bool> IsAnyUserExistsAsync(string username)
   {
-    return await context.Users.AsNoTracking().AnyAsync(u => u.username == username);
+    return await context.Operators.AsNoTracking().AnyAsync(u => u.username == username);
   }
 
   public async Task<string> GetUserHashPasswordAsync(string username)
   {
-    var pass = await context.Users.AsNoTracking()
+    var pass = await context.Operators.AsNoTracking()
     .Where(u => u.username == username)
     .Select(u => u.password)
     .FirstOrDefaultAsync();
@@ -28,21 +29,34 @@ public class AuthRepository(AppDbContext context) : IAuthRepository
     return pass;
   }
 
-  public async Task<Domain.Entities.User> GetUserByUsernameAsync(string username)
+  public async Task<UserInTokenDto> GetUserByUsernameAsync(string username)
   {
-    return await context.Users
+    return await context.Operators
     .AsNoTracking()
     .OrderBy(x => x.id)
     .Where(x => x.username.Equals(username))
-    .Select(u => new Domain.Entities.User(u.user_id, u.username, u.password, u.title, u.firstname, u.middlename, u.lastname, u.gender, u.email, u.mobile, u.role_id, u.role.name, u.user_locations.ElementAt(0).location_id, u.user_locations.ElementAt(0).location.name, u.created_at, u.updated_at))
-    .FirstOrDefaultAsync() ?? new Domain.Entities.User();
+    .Select(u => new UserInTokenDto(
+      u.operator_id,
+      u.username,
+      u.role.id,
+      u.role.name,
+      u.operator_locations.ElementAt(0).location_id,
+      u.operator_locations.ElementAt(0).location.name
+    )).FirstOrDefaultAsync() ?? new UserInTokenDto(
+      string.Empty,
+      string.Empty,
+      0,
+      string.Empty,
+      0,
+      string.Empty
+      );
   }
 
   public async Task<List<int>> GetLocationsByUsernameAsync(string username)
   {
-    return await context.Users.AsNoTracking()
+    return await context.Operators.AsNoTracking()
     .Where(u => u.username.Equals(username))
-    .SelectMany(u => u.user_locations)
+    .SelectMany(u => u.operator_locations)
     .Select(i => i.location_id)
     .ToListAsync();
 

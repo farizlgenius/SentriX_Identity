@@ -10,9 +10,9 @@ namespace Identity.Api.Controllers
     public class CompanyController(ICompanyService service) : ControllerBase
     {
         [HttpGet("pagination")]
-        public async Task<IActionResult> GetPaginationCompaniesByLocationIdAsync([FromQuery] int LocationId, int Page, int PageSize)
+        public async Task<IActionResult> GetPaginationCompaniesByLocationIdAsync([FromQuery] int Page, [FromQuery] int PageSize)
         {
-            var res = await service.GetPaginationCompaniesByLocationIdAsync(LocationId, Page, PageSize);
+            var res = await service.GetPaginationCompaniesByLocationIdAsync(Page, PageSize);
             return Ok(res);
         }
 

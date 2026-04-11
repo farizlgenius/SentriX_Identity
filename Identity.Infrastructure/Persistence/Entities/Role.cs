@@ -9,7 +9,7 @@ public sealed class Role : BaseEntity
   // Relation here
   public int location_id { get; set; }
   public Location location { get; set; } = default!;
-  public ICollection<User> users { get; set; } = new List<User>();
+  public ICollection<Operator> users { get; set; } = new List<Operator>();
   public ICollection<Permission> permissions { get; set; } = new List<Permission>();
   public Role() { }
   public Role(Domain.Entities.Role domain)
