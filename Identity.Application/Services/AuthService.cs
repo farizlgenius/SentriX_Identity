@@ -4,12 +4,13 @@ using Identity.Application.Exceptions;
 using Identity.Application.Helpers;
 using Identity.Application.Interfaces;
 using Identity.Domain.Constants;
+using Identity.Domain.Entities;
 using Identity.Domain.Enums;
 using Microsoft.AspNetCore.Http;
 
 namespace Identity.Application.Services;
 
-public class AuthService(IAuthRepository repo, IJwtService service) : IAuthService
+public class AuthService(IAuthRepository repo, IJwtService service, ICacheService redis) : IAuthService
 {
   public async Task<MeDto> GetMeByUsernameAndRoleIdAsync(string username, int roleId)
   {
@@ -93,7 +94,13 @@ public class AuthService(IAuthRepository repo, IJwtService service) : IAuthServi
   public async Task<TokenDto> RefreshTokenAsync(string refreshToken, HttpResponse response)
   {
     var inCommingHashed = TokenHasher.Hash(refreshToken);
-    var refresh = await service.GetRefreshTokenAsync(inCommingHashed);
+
+    // Get from redis first
+    //...
+    var refresh = await redis.GetAsync<RefreshToken>(inCommingHashed);
+    if (refresh == null)
+      refresh = await service.GetRefreshTokenAsync(inCommingHashed);
+
     // Validate token
     if (string.IsNullOrWhiteSpace(refresh.HashedToken))
       throw new NotFoundException(AuthResponseMessage.RefreshTokenNotFound);
@@ -105,7 +112,8 @@ public class AuthService(IAuthRepository repo, IJwtService service) : IAuthServi
       throw new BadRequestException(AuthResponseMessage.RefreshTokenInvalid);
 
     // Generate token (for demonstration, using a simple string)
-    var token = await service.RefreshTokenAsync(refresh);
+    var user = await repo.GetUserByUsernameAsync(refresh.UserName);
+    var token = await service.RefreshTokenAsync(user);
 
     response.Cookies.Append("refresh_token", token.RefreshToken, new CookieOptions
     {

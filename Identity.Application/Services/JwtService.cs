@@ -10,16 +10,18 @@ using Identity.Domain.Entities;
 using Identity.Application.Helpers;
 using Identity.Domain.Enums;
 using Identity.Application.DTOs;
+using System.Text.Json;
 
 namespace Identity.Application.Services;
 
-public sealed class JwtService(IJwtData settings, IRefreshTokenAuditRepository repo) : IJwtService
+public sealed class JwtService(IJwtData settings, IRefreshTokenAuditRepository repo, ICacheService redis) : IJwtService
 {
   private readonly string _secretKey = settings.Secret;
   private readonly string _issuer = settings.Issuer;
   private readonly string _audience = settings.Audience;
   private readonly short _accessTokenMinutes = settings.AccessTokenMinutes;
   private readonly short _refreshTokenDays = settings.RefreshTokenDays;
+  private readonly TimeSpan _ttl = TimeSpan.FromDays(settings.RefreshTokenDays);
   public async Task<Token> GenerateTokenAsync(UserInTokenDto user)
   {
     var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey));
@@ -53,8 +55,22 @@ public sealed class JwtService(IJwtData settings, IRefreshTokenAuditRepository r
     // create random refresh token and store hashed in redis + audit in DB
     var rawRefresh = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
 
+    // Store Token in Cache
+    var hashedRefresh = TokenHasher.Hash(rawRefresh);
+    Console.WriteLine(hashedRefresh);
+    var json = new RefreshToken
+    (hashedRefresh, user.UserId, user.Username, TokenAction.CREATE, now.AddDays(_refreshTokenDays));
+
+    await redis.SetAsync(
+      hashedRefresh,
+      json,
+      _ttl
+    );
+
+
+
     // Save Refresh Token in Redis with expiration (not implemented here, just a placeholder)
-    await repo.AddAsync(user.Username, Convert.ToBase64String(SHA256.HashData(Encoding.UTF8.GetBytes(rawRefresh))), Domain.Enums.TokenAction.CREATE, now.AddDays(_refreshTokenDays));
+    await repo.AddAsync(user.Username, hashedRefresh, Domain.Enums.TokenAction.CREATE, now.AddDays(_refreshTokenDays));
 
     return new Token(
       accessToken: new JwtSecurityTokenHandler().WriteToken(token),
@@ -64,7 +80,7 @@ public sealed class JwtService(IJwtData settings, IRefreshTokenAuditRepository r
     );
   }
 
-  public async Task<Token> RefreshTokenAsync(RefreshToken refreshToken)
+  public async Task<Token> RefreshTokenAsync(UserInTokenDto user)
   {
     var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey));
     var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -72,9 +88,17 @@ public sealed class JwtService(IJwtData settings, IRefreshTokenAuditRepository r
 
     var claims = new[]
     {
+
       // Adding data to token claims (for demonstration, only username is added)
-      new Claim(JwtRegisteredClaimNames.Sub, refreshToken.UserName),
+      new Claim("user_id",user.UserId),
+      new Claim(JwtRegisteredClaimNames.Sub, user.Username),
       new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+
+      // Authorized
+      new Claim("role",user.RoleName),
+      new Claim("role_id",user.RoleId.ToString()),
+      new Claim("tenant_id",user.LocationId.ToString()),
+      new Claim("tenant",user.LocationName)
 
     };
 
@@ -91,7 +115,7 @@ public sealed class JwtService(IJwtData settings, IRefreshTokenAuditRepository r
     var rawRefresh = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
 
     // Save Refresh Token in Redis with expiration (not implemented here, just a placeholder)
-    await repo.AddAsync(refreshToken.UserName, Convert.ToBase64String(SHA256.HashData(Encoding.UTF8.GetBytes(rawRefresh))), Domain.Enums.TokenAction.ROTATE, now.AddDays(_refreshTokenDays));
+    await repo.AddAsync(user.Username, Convert.ToBase64String(SHA256.HashData(Encoding.UTF8.GetBytes(rawRefresh))), Domain.Enums.TokenAction.ROTATE, now.AddDays(_refreshTokenDays));
 
     return new Token(
       accessToken: new JwtSecurityTokenHandler().WriteToken(res),

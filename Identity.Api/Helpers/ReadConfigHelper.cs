@@ -11,7 +11,9 @@ public class ReadConfigHelper
     // ==========================
     // Read config from appsetting.json
     // ==========================
-
+    builder.Services.Configure<RedisSettings>(
+      builder.Configuration.GetSection("Redis")
+    );
 
     builder.Services
            .AddOptions<JwtData>()

@@ -2,7 +2,6 @@
 using System.Text;
 using Identity.Api.Helpers;
 using Identity.Api.Middlewares;
-using Identity.Api.Settings;
 using Identity.Application.Settings;
 using Identity.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -25,11 +24,7 @@ public class Program
         // ==========================
         // Cache service setting
         // ==========================
-        // builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
-        // {
-        //     var configuration = builder.Configuration.GetSection("Redis")["ConnectionString"] ?? "localhost:6379";
-        //     return ConnectionMultiplexer.Connect(configuration);
-        // });
+        CacheSettingHelper.RedisConfiguration(builder);
 
         // ==========================
         // RabbitMQ DI service setting
