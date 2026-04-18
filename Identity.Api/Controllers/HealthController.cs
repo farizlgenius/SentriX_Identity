@@ -8,7 +8,6 @@ namespace Identity.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class HealthController : ControllerBase
     {
         [HttpGet]
@@ -17,6 +16,7 @@ namespace Identity.Api.Controllers
             return Ok(
                 new HealthDto(HttpStatusCode.OK, "Service is healthy", DateTime.UtcNow)
             );
+
         }
     }
 }

@@ -54,6 +54,8 @@ public sealed class GlobalException : IMiddleware
 
     var response = new BaseDto(System.Net.HttpStatusCode.BadRequest, ex.Message, DateTime.UtcNow);
     return context.Response.WriteAsJsonAsync(response);
+    
+    
   }
 
   private Task UnauthorizedAccessExceptionHandler(HttpContext context, Exception ex)
@@ -125,6 +127,7 @@ public sealed class GlobalException : IMiddleware
     }
 
   }
+
 
 
 }

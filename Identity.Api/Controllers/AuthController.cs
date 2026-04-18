@@ -57,7 +57,7 @@ namespace Identity.Api.Controllers
             }
         }
 
-        [HttpPost("me")]
+        [HttpGet("me")]
         [Authorize]
         public async Task<IActionResult> GetMe()
         {
@@ -68,6 +68,7 @@ namespace Identity.Api.Controllers
             return Ok(result);
 
         }
+
 
         [HttpPost("hash")]
         public async Task<IActionResult> GetHash([FromBody] string password)

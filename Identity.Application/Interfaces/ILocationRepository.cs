@@ -15,4 +15,5 @@ public interface ILocationRepository
   Task<bool> IsAnyByIdAsync(int id);
   Task<LocationDto> DeleteByIdAsync(int id);
   Task<LocationDto> UpdateAsync(Location location);
+  Task<List<LocationDto>> GetRangeLocationAsync(List<int> ids);
 }

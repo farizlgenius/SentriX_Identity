@@ -4,6 +4,7 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <!-- <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences> -->
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,5 +23,9 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.1" />
     <PackageReference Include="StackExchange.Redis" Version="2.12.14" />
   </ItemGroup>
+
+  <ItemGroup>
+  <PackageReference Update="System.Security.Cryptography.Xml" Version="8.0.4" />
+</ItemGroup>
 
 </Project>

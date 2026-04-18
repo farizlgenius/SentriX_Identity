@@ -50,8 +50,8 @@ public class AuthService(IAuthRepository repo, IJwtService service, ICacheServic
     {
       HttpOnly = true,
       Secure = true,
-      SameSite = SameSiteMode.Strict,
-      Path = "/api/Auth",
+      SameSite = SameSiteMode.None,
+      // Path = "/api/Auth",
       Expires = new DateTimeOffset(token.RefreshExpireAt, TimeSpan.Zero)
     });
 
@@ -84,8 +84,8 @@ public class AuthService(IAuthRepository repo, IJwtService service, ICacheServic
     {
       HttpOnly = true,
       Secure = true,
-      SameSite = SameSiteMode.Strict,
-      Path = "/api/Auth"
+      SameSite = SameSiteMode.None,
+      // Path = "/api/Auth"
     });
 
     return new BaseDto(System.Net.HttpStatusCode.OK, AuthResponseMessage.LogoutSuccess, DateTime.UtcNow);
@@ -119,8 +119,8 @@ public class AuthService(IAuthRepository repo, IJwtService service, ICacheServic
     {
       HttpOnly = true,
       Secure = true,
-      SameSite = SameSiteMode.Strict,
-      Path = "/api/Auth",
+      SameSite = SameSiteMode.None,
+      // Path = "/api/Auth",
       Expires = new DateTimeOffset(token.RefreshExpireAt, TimeSpan.Zero)
     });
 

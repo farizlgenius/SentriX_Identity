@@ -83,7 +83,18 @@ await context.Countries.AsNoTracking().OrderByDescending(c => c.id).Where(c => c
     return new PaginationDto<LocationDto>(Page, PageSize, totalItems, (int)Math.Ceiling(totalItems / (double)PageSize), items);
   }
 
-  public async Task<bool> IsAnyByIdAsync(int id)
+      public async Task<List<LocationDto>> GetRangeLocationAsync(List<int> ids)
+      {
+            var locations = await context.Locations
+                .AsNoTracking()
+                .Where(l => ids.Contains(l.id))
+                .Select(x => new LocationDto(x.id, x.name, x.description, x.country_id, x.country.name))
+                .ToListAsync();
+                
+            return locations;
+      }
+
+      public async Task<bool> IsAnyByIdAsync(int id)
   {
     return await context.Locations.AsNoTracking()
     .AnyAsync(l => l.id == id);

@@ -19,6 +19,13 @@ namespace Identity.Api.Controllers
             return Ok(res);
         }
 
+        [HttpPost("range")]
+        public async Task<IActionResult> GetRangeLocationAsync([FromBody] RangeLocationDto dto)
+        {
+            var res = await service.GetRangeLocationAsync(dto);
+            return Ok(res);
+        }
+
         [HttpGet("countries")]
         public async Task<IActionResult> GetCountriesAsync([FromQuery] int Page, int PageSize)
         {

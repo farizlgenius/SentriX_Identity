@@ -76,4 +76,12 @@ public class LocationService(ILocationRepository repo) : ILocationService
 
 
   }
+
+      public async Task<List<LocationDto>> GetRangeLocationAsync(RangeLocationDto dto)
+      {
+            if(dto.Ids == null || dto.Ids.Count == 0)
+                throw new BadRequestException(ResponseMessage.LocationInvalid);
+
+            return await repo.GetRangeLocationAsync(dto.Ids);
+      }
 }

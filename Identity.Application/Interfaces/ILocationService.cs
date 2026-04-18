@@ -11,4 +11,5 @@ public interface ILocationService
   Task<PaginationDto<CountryDto>> GetCountriesPaginationAsync(int Page, int PageSize);
   Task<LocationDto> DeleteByIdAsync(int id);
   Task<LocationDto> UpdateAsync(LocationDto dto);
+  Task<List<LocationDto>> GetRangeLocationAsync(RangeLocationDto dto);
 }
