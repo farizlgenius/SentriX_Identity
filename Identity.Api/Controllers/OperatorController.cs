@@ -9,10 +9,10 @@ namespace Identity.Api.Controllers
     [ApiController]
     public class OperatorController(IOperatorService service) : ControllerBase
     {
-        [HttpGet("/api/{location}/[controller]/pagination")]
-        public async Task<IActionResult> GetPaginationWithLocationIdAsync(int location, [FromQuery] int Page, [FromQuery] int PageSize)
+        [HttpGet("pagination")]
+        public async Task<IActionResult> GetPaginationWithLocationIdAsync([FromQuery]int LocationId, [FromQuery] int Page, [FromQuery] int PageSize)
         {
-            var res = await service.GetPaginationWithLocationIdAsync(location, Page, PageSize);
+            var res = await service.GetPaginationWithLocationIdAsync(LocationId, Page, PageSize);
             return Ok(res);
         }
 

@@ -13,4 +13,7 @@ public interface IRoleRepository
   Task<bool> IsAnyWithIdAsync(int id);
   Task<RoleDto> DeleteByIdAsync(int id);
   Task<RoleDto> UpdateAsync(Role domain);
+  Task<List<FeatureDto>> GetFeaturesAsync();
+  Task<bool> IsAllExistByIdsAsync(List<int> ids);
+  Task<List<RoleDto>> DeleteRangeAsync(List<int> ids);
 }

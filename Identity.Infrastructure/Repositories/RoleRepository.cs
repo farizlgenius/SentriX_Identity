@@ -64,7 +64,38 @@ public class RoleRepository(AppDbContext context) : IRoleRepository
 
   }
 
-  public async Task<PaginationDto<RoleDto>> GetPaginationWithLocationIdAsync(int LocationId, int Page, int PageSize)
+      public async Task<List<RoleDto>> DeleteRangeAsync(List<int> ids)
+      {
+             var records = await context.Roles.Where(r => ids.Contains(r.id)).ToListAsync();
+            if (records is null || records.Count == 0)
+                  throw new Exception(DbExceptionMessage.RecordNotFound);
+
+            context.Roles.RemoveRange(records);
+            var save = await context.SaveChangesAsync();
+            if (save <= 0)
+                  throw new Exception(DbExceptionMessage.DeleteRecordUnsuccessful);
+
+            return records.Select(data => new RoleDto(
+              data.id,
+              data.name,
+              data.permissions
+              .Select(r => new PermissionDto(r.feature_id,
+                context.Features.AsNoTracking().OrderByDescending(x => x.id).Where(x => x.id == r.feature_id).Select(x => x.name).FirstOrDefault() ?? "",
+              r.is_enabled,
+              r.is_created,
+              r.is_updated,
+              r.is_deleted))
+              .ToList(),
+              context.Locations.AsNoTracking().OrderByDescending(x => x.id).Where(x => x.id == data.location_id).Select(x => x.name).FirstOrDefault() ?? ""
+              )).ToList();
+      }
+
+      public async Task<List<FeatureDto>> GetFeaturesAsync()
+      {
+            return await context.Features.AsNoTracking().Select(x => new FeatureDto(x.id,x.name)).ToListAsync();
+      }
+
+      public async Task<PaginationDto<RoleDto>> GetPaginationWithLocationIdAsync(int LocationId, int Page, int PageSize)
   {
     var query = context.Roles.AsNoTracking().AsQueryable();
     var totalItems = await query.CountAsync();
@@ -80,7 +111,17 @@ public class RoleRepository(AppDbContext context) : IRoleRepository
     , items);
   }
 
-  public async Task<bool> IsAnyLocationIdAsync(int LocationId)
+       public async Task<bool> IsAllExistByIdsAsync(List<int> ids)
+      {
+            var count = await context.Roles
+       .AsNoTracking()
+       .Where(r => ids.Contains(r.id))
+       .CountAsync();
+
+            return count == ids.Count;
+      }
+
+      public async Task<bool> IsAnyLocationIdAsync(int LocationId)
   {
     return await context.Locations.AsNoTracking().AnyAsync(l => l.id == LocationId);
   }

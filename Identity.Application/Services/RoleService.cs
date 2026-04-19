@@ -41,7 +41,25 @@ public sealed class RoleService(IRoleRepository repo) : IRoleService
     return await repo.DeleteByIdAsync(id);
   }
 
-  public async Task<PaginationDto<RoleDto>> GetPaginationWithLocationIdAsync(int location, int Page, int PageSize)
+      public async Task<List<RoleDto>> DeleteRangeAsync(RangeIdDto dto)
+      {
+            if(dto.Ids == null || dto.Ids.Count <= 0)
+                  throw new BadRequestException(ResponseMessage.RoleInvalid);
+
+            if(!await repo.IsAllExistByIdsAsync(dto.Ids))
+                  throw new BadRequestException(ResponseMessage.RoleNotFound);
+
+            
+            return await repo.DeleteRangeAsync(dto.Ids);
+      }
+
+      public async Task<List<FeatureDto>> GetFeaturesAsync()
+      {
+            var res = await repo.GetFeaturesAsync();
+            return res;
+      }
+
+      public async Task<PaginationDto<RoleDto>> GetPaginationWithLocationIdAsync(int location, int Page, int PageSize)
   {
     if (!await repo.IsAnyLocationIdAsync(location))
       throw new BadRequestException(ResponseMessage.LocationInvalid);

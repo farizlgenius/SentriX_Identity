@@ -9,10 +9,10 @@ namespace Identity.Api.Controllers
     [ApiController]
     public class RoleController(IRoleService service) : ControllerBase
     {
-        [HttpGet("/api/{location}/[controller]/pagination")]
-        public async Task<IActionResult> GetPaginationWithLocationIdAsync(int location, [FromQuery] int Page, [FromQuery] int PageSize)
+        [HttpGet("pagination")]
+        public async Task<IActionResult> GetPaginationWithLocationIdAsync([FromQuery]int LocationId, [FromQuery] int Page, [FromQuery] int PageSize)
         {
-            var res = await service.GetPaginationWithLocationIdAsync(location, Page, PageSize);
+            var res = await service.GetPaginationWithLocationIdAsync(LocationId, Page, PageSize);
             return Ok(res);
         }
 
@@ -34,6 +34,20 @@ namespace Identity.Api.Controllers
         public async Task<IActionResult> UpdateAsync([FromBody] UpdateRoleDto dto)
         {
             var res = await service.UpdateAsync(dto);
+            return Ok(res);
+        }
+
+        [HttpGet("feature")]
+        public async Task<IActionResult> GetFeaturesAsync()
+        {
+            var res = await service.GetFeaturesAsync();
+            return Ok(res);
+        }
+
+        [HttpPost("delete/range")]
+        public async Task<IActionResult> DeleteRangeAsync([FromBody] RangeIdDto Ids)
+        {
+            var res = await service.DeleteRangeAsync(Ids);
             return Ok(res);
         }
     }
