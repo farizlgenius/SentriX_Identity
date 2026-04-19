@@ -33,9 +33,26 @@ public class CompanyService(ICompanyRepository repo) : ICompanyService
             return await repo.DeleteByIdAsync(id);
       }
 
-      public async Task<PaginationDto<CompanyDto>> GetPaginationCompaniesByLocationIdAsync(int Page, int PageSize)
+      public async Task<List<CompanyDto>> DeleteRangeAsync(RangeIdDto dto)
       {
-            return await repo.GetPaginationCompaniesByLocationIdAsync(Page, PageSize);
+            if(dto.Ids == null || dto.Ids.Count <= 0)
+                  throw new BadRequestException(ResponseMessage.CompanyInvalid);
+
+            if(!await repo.IsAllExistByIdsAsync(dto.Ids))
+                  throw new BadRequestException(ResponseMessage.CompanyNotFound);
+
+            
+            return await repo.DeleteRangeAsync(dto.Ids);
+      }
+
+      public async Task<List<CompanyDto>> GetAllAsync()
+      {
+            return await repo.GetAllAsync();
+      }
+
+      public async Task<PaginationDto<CompanyDto>> GetPaginationCompaniesAsync(int Page, int PageSize, string Search)
+      {
+            return await repo.GetPaginationCompaniesAsync(Page, PageSize, Search);
       }
 
       public async Task<CompanyDto> UpdateAsync(CompanyDto dto)

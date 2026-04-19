@@ -50,9 +50,32 @@ public sealed class CompanyRepository(AppDbContext context) : ICompanyRepository
 
 
 
-      public async Task<PaginationDto<CompanyDto>> GetPaginationCompaniesByLocationIdAsync(int Page, int PageSize)
+      public async Task<PaginationDto<CompanyDto>> GetPaginationCompaniesAsync(int Page, int PageSize, string Search)
       {
             var query = context.Companies.AsNoTracking().AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(Search))
+            {
+                  var search = Search.Trim();
+
+                  if (context.Database.IsNpgsql())
+                  {
+                        var pattern = $"%{search}%";
+
+                        query = query.Where(x =>
+                            EF.Functions.ILike(x.name, pattern) ||
+                            EF.Functions.ILike(x.description, pattern) 
+                        );
+                  }
+                  else // SQL Server
+                  {
+                        query = query.Where(x =>
+                            x.name.Contains(search) ||
+                            x.description.Contains(search) 
+                        );
+                  }
+            }
+
             var totalItems = await query.CountAsync();
             var items = await query
                   .OrderByDescending(x => x.id)
@@ -64,6 +87,15 @@ public sealed class CompanyRepository(AppDbContext context) : ICompanyRepository
             return new PaginationDto<CompanyDto>(Page, PageSize, totalItems, (int)Math.Ceiling(totalItems / (double)PageSize), items);
       }
 
+      public async Task<bool> IsAllExistByIdsAsync(List<int> ids)
+      {
+            var count = await context.Companies
+       .AsNoTracking()
+       .Where(l => ids.Contains(l.id))
+       .CountAsync();
+
+            return count == ids.Count;
+      }
 
       public async Task<bool> IsAnyWithIdAsync(int id)
       {
@@ -90,5 +122,32 @@ public sealed class CompanyRepository(AppDbContext context) : ICompanyRepository
              data.Entity.description,
              data.Entity.address);
 
+      }
+
+      public async Task<List<CompanyDto>> DeleteRangeAsync(List<int> ids)
+      {
+
+            var records = await context.Companies.Where(l => ids.Contains(l.id)).ToListAsync();
+            if (records is null || records.Count == 0)
+                  throw new NotFoundException(DbExceptionMessage.RecordNotFound);
+
+            context.Companies.RemoveRange(records);
+            var save = await context.SaveChangesAsync();
+            if (save <= 0)
+                  throw new Exception(DbExceptionMessage.DeleteRecordUnsuccessful);
+
+            return records.Select(data => new CompanyDto(
+              data.id,
+              data.name,
+              data.description,
+              data.address)).ToList();
+
+
+      }
+
+      public async Task<List<CompanyDto>> GetAllAsync()
+      {
+            return await context.Companies.AsNoTracking()
+            .Select(x => new CompanyDto(x.id,x.name,x.description,x.address)).ToListAsync();
       }
 }

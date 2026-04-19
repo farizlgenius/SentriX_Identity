@@ -9,7 +9,7 @@ namespace Identity.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    // [Authorize]
+    [Authorize]
     public class LocationController(ILocationService service) : ControllerBase
     {
         [HttpGet]
@@ -20,7 +20,7 @@ namespace Identity.Api.Controllers
         }
 
         [HttpPost("range")]
-        public async Task<IActionResult> GetRangeLocationAsync([FromBody] RangeLocationDto dto)
+        public async Task<IActionResult> GetRangeLocationAsync([FromBody] RangeIdDto dto)
         {
             var res = await service.GetRangeLocationAsync(dto);
             return Ok(res);
@@ -33,10 +33,17 @@ namespace Identity.Api.Controllers
             return Ok(res);
         }
 
-        [HttpGet("pagination")]
-        public async Task<IActionResult> GetPaginationAsync([FromQuery] int Page, int PageSize)
+        [HttpGet("country")]
+        public async Task<IActionResult> GetAllCountryAsync()
         {
-            var res = await service.GetPaginationAsync(Page, PageSize);
+            var res = await service.GetAllCountriesAsync();
+            return Ok(res);
+        }
+
+        [HttpGet("pagination")]
+        public async Task<IActionResult> GetPaginationAsync([FromQuery] int Page,[FromQuery] int PageSize,[FromQuery]string? Search)
+        {
+            var res = await service.GetPaginationAsync(Page, PageSize, Search ?? "");
             return Ok(res);
         }
 
@@ -51,6 +58,13 @@ namespace Identity.Api.Controllers
         public async Task<IActionResult> DeleteByIdAsync(int id)
         {
             var res = await service.DeleteByIdAsync(id);
+            return Ok(res);
+        }
+
+        [HttpPost("delete/range")]
+        public async Task<IActionResult> DeleteRangeAsync([FromBody] RangeIdDto dto)
+        {
+            var res = await service.DeleteRangeAsync(dto);
             return Ok(res);
         }
 

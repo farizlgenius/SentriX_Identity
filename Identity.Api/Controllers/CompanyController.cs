@@ -10,9 +10,16 @@ namespace Identity.Api.Controllers
     public class CompanyController(ICompanyService service) : ControllerBase
     {
         [HttpGet("pagination")]
-        public async Task<IActionResult> GetPaginationCompaniesByLocationIdAsync([FromQuery] int Page, [FromQuery] int PageSize)
+        public async Task<IActionResult> GetPaginationCompaniesAsync([FromQuery] int Page, [FromQuery] int PageSize,[FromQuery] string? Search)
         {
-            var res = await service.GetPaginationCompaniesByLocationIdAsync(Page, PageSize);
+            var res = await service.GetPaginationCompaniesAsync( Page, PageSize, Search ?? "");
+            return Ok(res);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllAsync()
+        {
+            var res = await service.GetAllAsync();
             return Ok(res);
         }
 
@@ -34,6 +41,13 @@ namespace Identity.Api.Controllers
         public async Task<IActionResult> UpdateAsync([FromBody] CompanyDto dto)
         {
             var res = await service.UpdateAsync(dto);
+            return Ok(res);
+        }
+
+        [HttpPost("delete/range")]
+        public async Task<IActionResult> DeleteRangeAsync([FromBody]RangeIdDto dto)
+        {
+            var res = await service.DeleteRangeAsync(dto);
             return Ok(res);
         }
 

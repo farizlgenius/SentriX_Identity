@@ -21,6 +21,7 @@ public class ResponseMessage
   public static string RecordNotFound = "Record not found.";
   public static string QueryIdInvalid = "Query id invalid.";
   public static string CompanyInvalid = "Company invalid.";
+  public static string CompanyNotFound = "Company not found.";
   public static string PositionInvalid = "Position invalid.";
   public static string DepartmentInvalid = "Department invalid.";
   public static string RoleInvalid = "Role invalid.";

@@ -32,9 +32,21 @@ public sealed class PositionService(IPositionRepository repo) : IPositionService
             return await repo.DeleteByIdAsync(id);
       }
 
-      public async Task<PaginationDto<PositionDto>> GetPaginationWithDepartmentIdAsync(int DepartmentId, int Page, int PageSize)
+      public async Task<List<PositionDto>> DeleteRangeAsync(RangeIdDto dto)
       {
-            var res = await repo.GetPaginationWithDepartmentIdAsync(DepartmentId, Page, PageSize);
+            if(dto.Ids == null || dto.Ids.Count <= 0)
+                  throw new BadRequestException(ResponseMessage.PositionInvalid);
+
+            if(!await repo.IsAllExistByIdsAsync(dto.Ids))
+                  throw new BadRequestException(ResponseMessage.CompanyNotFound);
+
+            
+            return await repo.DeleteRangeAsync(dto.Ids);
+      }
+
+      public async Task<PaginationDto<PositionDto>> GetPaginationWithDepartmentIdAsync(int DepartmentId, int Page, int PageSize, string Search)
+      {
+            var res = await repo.GetPaginationWithDepartmentIdAsync(DepartmentId, Page, PageSize, Search);
             return res;
       }
 

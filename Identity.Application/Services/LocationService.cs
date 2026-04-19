@@ -20,9 +20,9 @@ public class LocationService(ILocationRepository repo) : ILocationService
     return res;
   }
 
-  public async Task<PaginationDto<LocationDto>> GetPaginationAsync(int Page, int PageSize)
+  public async Task<PaginationDto<LocationDto>> GetPaginationAsync(int Page, int PageSize,string Search)
   {
-    var res = await repo.GetPaginationAsync(Page, PageSize);
+    var res = await repo.GetPaginationAsync(Page, PageSize, Search);
     return res;
   }
 
@@ -77,11 +77,27 @@ public class LocationService(ILocationRepository repo) : ILocationService
 
   }
 
-      public async Task<List<LocationDto>> GetRangeLocationAsync(RangeLocationDto dto)
+      public async Task<List<LocationDto>> GetRangeLocationAsync(RangeIdDto dto)
       {
             if(dto.Ids == null || dto.Ids.Count == 0)
                 throw new BadRequestException(ResponseMessage.LocationInvalid);
 
             return await repo.GetRangeLocationAsync(dto.Ids);
+      }
+
+      public async Task<List<CountryDto>> GetAllCountriesAsync()
+      {
+            return await repo.GetAllCountriesAsync();
+      }
+
+      public async Task<List<LocationDto>> DeleteRangeAsync(RangeIdDto dto)
+      {
+          if(dto.Ids == null || dto.Ids.Count == 0)
+              throw new BadRequestException(ResponseMessage.LocationInvalid);
+
+          if(!await repo.IsAllExistByIdsAsync(dto.Ids))
+              throw new NotFoundException(ResponseMessage.LocationNotFound);
+
+          return await repo.DeleteRangeAsync(dto.Ids);
       }
 }

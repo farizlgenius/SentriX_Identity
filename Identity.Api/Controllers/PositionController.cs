@@ -10,9 +10,9 @@ namespace Identity.Api.Controllers
     public class PositionController(IPositionService service) : ControllerBase
     {
         [HttpGet("pagination")]
-        public async Task<IActionResult> GetPaginationWithDepartmentIdAsync([FromQuery]int DepartmentId,int Page,int PageSize)
+        public async Task<IActionResult> GetPaginationWithDepartmentIdAsync([FromQuery]int DepartmentId,int Page,int PageSize,string? Search)
         {
-            var res = await service.GetPaginationWithDepartmentIdAsync(DepartmentId, Page, PageSize);
+            var res = await service.GetPaginationWithDepartmentIdAsync(DepartmentId, Page, PageSize, Search ?? "");
             return Ok(res);
         }
 
@@ -34,6 +34,13 @@ namespace Identity.Api.Controllers
         public async Task<IActionResult> DeleteByIdAsync(int id)
         {
             var res = await service.DeleteByIdAsync(id);
+            return Ok(res);
+        }
+
+        [HttpPost("delete/range")]
+        public async Task<IActionResult> DeleteRangeAsync([FromBody] RangeIdDto Ids)
+        {
+            var res = await service.DeleteRangeAsync(Ids);
             return Ok(res);
         }
     }

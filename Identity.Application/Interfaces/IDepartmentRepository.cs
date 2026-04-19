@@ -12,5 +12,9 @@ public interface IDepartmentRepository
   Task<DepartmentDto> AddAsync(Department domain);
   Task<DepartmentDto> UpdateAsync(Department domain);
   Task<DepartmentDto> DeleteByIdAsync(int id);
-  Task<PaginationDto<DepartmentDto>> GetPaginationByCompanyIdAsync(int companyId, int page, int pageSize);
+  Task<PaginationDto<DepartmentDto>> GetPaginationByCompanyIdAsync(int companyId, int page, int pageSize, string search);
+  Task<bool> IsAllExistByIdsAsync(List<int> ids);
+  Task<List<DepartmentDto>> DeleteRangeAsync(List<int> ids);
+  Task<List<DepartmentDto>> GetByCompanyIdAsync(int id);
+  
 }

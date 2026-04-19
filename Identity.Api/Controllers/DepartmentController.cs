@@ -9,10 +9,17 @@ namespace Identity.Api.Controllers
     [ApiController]
     public class DepartmentController(IDepartmentService service) : ControllerBase
     {
-        [HttpGet("pagination")]
-        public async Task<IActionResult> GetPaginationByCompanyIdAsync([FromQuery] int CompanyId, int Page, int PageSize)
+        [HttpGet("company/{id}")]
+        public async Task<IActionResult> GetByCompanyIdAsync(int id)
         {
-            var res = await service.GetPaginationByCompanyIdAsync(CompanyId, Page, PageSize);
+            var res = await service.GetByCompanyIdAsync(id);
+            return Ok(res);
+        }
+
+        [HttpGet("pagination")]
+        public async Task<IActionResult> GetPaginationByCompanyIdAsync([FromQuery] int CompanyId, int Page, int PageSize,string? Search)
+        {
+            var res = await service.GetPaginationByCompanyIdAsync(CompanyId, Page, PageSize, Search ?? "");
             return Ok(res);
         }
 
@@ -34,6 +41,13 @@ namespace Identity.Api.Controllers
         public async Task<IActionResult> UpdateAsync([FromBody] DepartmentDto dto)
         {
             var res = await service.UpdateAsync(dto);
+            return Ok(res);
+        }
+
+        [HttpPost("delete/range")]
+        public async Task<IActionResult> DeleteRangeAsync(RangeIdDto dto)
+        {
+            var res = await service.DeleteRangeAsync(dto);
             return Ok(res);
         }
     }
