@@ -11,4 +11,5 @@ public interface IRoleService
   Task<RoleDto> UpdateAsync(UpdateRoleDto dto);
   Task<List<FeatureDto>> GetFeaturesAsync();
   Task<List<RoleDto>> DeleteRangeAsync(RangeIdDto ids);
+  Task<List<RoleDto>> GetByLocationIdAsync(int location);
 }

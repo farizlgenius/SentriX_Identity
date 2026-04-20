@@ -9,6 +9,13 @@ namespace Identity.Api.Controllers
     [ApiController]
     public class RoleController(IRoleService service) : ControllerBase
     {
+        [HttpGet("location/{id}")]
+        public async Task<IActionResult> GetByLocationIdAsync(int id)
+        {
+            var res = await service.GetByLocationIdAsync(id);
+            return Ok(res);
+        }
+
         [HttpGet("pagination")]
         public async Task<IActionResult> GetPaginationWithLocationIdAsync([FromQuery]int LocationId, [FromQuery] int Page, [FromQuery] int PageSize)
         {

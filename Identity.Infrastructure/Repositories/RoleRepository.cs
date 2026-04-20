@@ -90,6 +90,23 @@ public class RoleRepository(AppDbContext context) : IRoleRepository
               )).ToList();
       }
 
+      public async Task<List<RoleDto>> GetByLocationIdAsync(int id)
+      {
+            return await context.Roles.AsNoTracking().OrderByDescending(x => x.id).Where(x => x.location_id ==id).Select(data => new RoleDto(
+              data.id,
+              data.name,
+              data.permissions
+              .Select(r => new PermissionDto(r.feature_id,
+                context.Features.AsNoTracking().OrderByDescending(x => x.id).Where(x => x.id == r.feature_id).Select(x => x.name).FirstOrDefault() ?? "",
+              r.is_enabled,
+              r.is_created,
+              r.is_updated,
+              r.is_deleted))
+              .ToList(),
+              context.Locations.AsNoTracking().OrderByDescending(x => x.id).Where(x => x.id == data.location_id).Select(x => x.name).FirstOrDefault() ?? ""
+              )).ToListAsync();
+      }
+
       public async Task<List<FeatureDto>> GetFeaturesAsync()
       {
             return await context.Features.AsNoTracking().Select(x => new FeatureDto(x.id,x.name)).ToListAsync();

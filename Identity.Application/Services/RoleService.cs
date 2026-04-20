@@ -53,6 +53,13 @@ public sealed class RoleService(IRoleRepository repo) : IRoleService
             return await repo.DeleteRangeAsync(dto.Ids);
       }
 
+      public async Task<List<RoleDto>> GetByLocationIdAsync(int location)
+      {
+            var res = await repo.GetByLocationIdAsync(location);
+            return res;
+
+      }
+
       public async Task<List<FeatureDto>> GetFeaturesAsync()
       {
             var res = await repo.GetFeaturesAsync();
