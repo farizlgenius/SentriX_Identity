@@ -19,6 +19,8 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
   public DbSet<RefreshTokenAudit> RefreshTokenAudits { get; set; }
   public DbSet<OperatorLocation> OperatorLocations { get; set; }
   public DbSet<Country> Countries { get; set; }
+  public DbSet<PasswordRule> PasswordRules {get; set;}
+  public DbSet<WeakPassword> WeakPasswords {get; set;}
 
   protected override void OnModelCreating(ModelBuilder modelBuilder)
   {
@@ -374,6 +376,26 @@ new Country { id = 177, name = "Zimbabwe", code = "ZW" }
     .HasData(
       new OperatorLocation { operator_id = 1, location_id = 1 }
     );
+
+    modelBuilder.Entity<PasswordRule>()
+            .HasMany(x => x.weaks)
+            .WithOne(x => x.password_rule)
+            .HasForeignKey(x => x.password_rule_id)
+            .HasPrincipalKey(x => x.id)
+            .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<PasswordRule>()
+            .HasData(
+            new PasswordRule { id = 1, len = 4, is_digit = false, is_lower = false, is_symbol = false, is_upper = false }
+            );
+
+        modelBuilder.Entity<WeakPassword>()
+            .HasData(
+            new WeakPassword { id = 1, pattern = "P@ssw0rd", password_rule_id = 1 },
+            new WeakPassword { id = 2, pattern = "password", password_rule_id = 1 },
+            new WeakPassword { id = 3, pattern = "admin", password_rule_id = 1 },
+            new WeakPassword { id = 4, pattern = "123456", password_rule_id = 1 }
+            );
 
   }
 }
